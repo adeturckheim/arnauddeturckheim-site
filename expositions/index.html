@@ -6,9 +6,13 @@
 <title>Expositions · Arnaud de Turckheim</title>
 <meta name="description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
 <link rel="canonical" href="https://arnauddeturckheim.com/expositions/">
+<link rel="alternate" hreflang="fr" href="https://arnauddeturckheim.com/expositions/">
+<link rel="alternate" hreflang="en" href="https://arnauddeturckheim.com/en/exhibitions/">
+<link rel="alternate" hreflang="x-default" href="https://arnauddeturckheim.com/expositions/">
 <meta property="og:title" content="Expositions · Arnaud de Turckheim">
 <meta property="og:description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
 <meta property="og:image" content="https://arnauddeturckheim.com/img/works/hors-saison.jpg">
+<meta property="og:locale" content="fr_FR">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f1efe9">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -19,8 +23,11 @@
 <body class="">
 <header class="top"><div class="wrap">
   <a class="brand" href="/">Arnaud de Turckheim</a>
-  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
-  <nav><a href="/photographies/">Photographies</a><a href="/expositions/" aria-current="page">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+  <div class="right">
+    <nav><a href="/photographies/">Photographies</a><a href="/expositions/" aria-current="page">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+    <a class="lang" href="/en/exhibitions/" hreflang="en" lang="en" title="English version">EN</a>
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
 </div></header>
 <main>
 
@@ -33,7 +40,7 @@
     <span class="y">2026</span>
     <span class="t"><em>Ce Qui Demeure</em></span>
     <span class="m">Exposition personnelle · 10 rue Lincoln, 75008 Paris<br>Commissariat de Pierre El Khoury</span>
-    <img class="" src="/img/thumbs/hors-saison.jpg" srcset="/img/thumbs/hors-saison.jpg 900w, /img/works/hors-saison.jpg 2200w" sizes="240px" width="2200" height="1466" loading="lazy" decoding="async" alt="Hors saison">
+    <img src="/img/thumbs/hors-saison.jpg" srcset="/img/thumbs/hors-saison.jpg 900w, /img/works/hors-saison.jpg 2200w" sizes="240px" width="2200" height="1466" loading="lazy" decoding="async" alt="Hors saison">
   </a>
 </div></section>
 
@@ -45,7 +52,7 @@
 </div></footer>
 <script>
 const b=document.querySelector('.burger');b.addEventListener('click',()=>{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)});
-document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href});
+document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]'),c=document.querySelector('[data-close]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&c)location=c.href});
 </script>
 </body>
 </html>

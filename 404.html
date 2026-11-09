@@ -6,9 +6,11 @@
 <title>Page introuvable · Arnaud de Turckheim</title>
 <meta name="description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
 <link rel="canonical" href="https://arnauddeturckheim.com/404.html">
+
 <meta property="og:title" content="Page introuvable · Arnaud de Turckheim">
 <meta property="og:description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
 <meta property="og:image" content="https://arnauddeturckheim.com/img/works/hors-saison.jpg">
+<meta property="og:locale" content="fr_FR">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f1efe9">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -19,13 +21,17 @@
 <body class="">
 <header class="top"><div class="wrap">
   <a class="brand" href="/">Arnaud de Turckheim</a>
-  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
-  <nav><a href="/photographies/">Photographies</a><a href="/expositions/">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+  <div class="right">
+    <nav><a href="/photographies/">Photographies</a><a href="/expositions/">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+    
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
 </div></header>
 <main>
 <section class="page-head"><div class="wrap">
   <p class="kicker">404</p><h1>Rien ici</h1>
   <p class="lead">Cette page n’existe pas, ou plus. <a href="/">Retour à l’accueil</a>.</p>
+  <p class="lead" lang="en">This page does not exist, or no longer does. <a href="/en/">Back to the homepage</a>.</p>
 </div></section>
 </main>
 <footer class="foot"><div class="wrap">
@@ -35,7 +41,7 @@
 </div></footer>
 <script>
 const b=document.querySelector('.burger');b.addEventListener('click',()=>{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)});
-document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href});
+document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]'),c=document.querySelector('[data-close]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&c)location=c.href});
 </script>
 </body>
 </html>

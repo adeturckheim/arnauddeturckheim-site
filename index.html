@@ -6,9 +6,13 @@
 <title>Arnaud de Turckheim · Photographe</title>
 <meta name="description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
 <link rel="canonical" href="https://arnauddeturckheim.com/">
+<link rel="alternate" hreflang="fr" href="https://arnauddeturckheim.com/">
+<link rel="alternate" hreflang="en" href="https://arnauddeturckheim.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://arnauddeturckheim.com/">
 <meta property="og:title" content="Arnaud de Turckheim · Photographe">
 <meta property="og:description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
 <meta property="og:image" content="https://arnauddeturckheim.com/img/works/la-figure-de-l-absence.jpg">
+<meta property="og:locale" content="fr_FR">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f1efe9">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -19,8 +23,11 @@
 <body class="is-home">
 <header class="top"><div class="wrap">
   <a class="brand" href="/">Arnaud de Turckheim</a>
-  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
-  <nav><a href="/photographies/">Photographies</a><a href="/expositions/">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+  <div class="right">
+    <nav><a href="/photographies/">Photographies</a><a href="/expositions/">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
+    <a class="lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
 </div></header>
 <main>
 
@@ -32,14 +39,14 @@
     <p class="links"><a class="arrow" href="/photographies/">Voir les photographies</a></p>
   </div>
   <a class="home-baobab" href="/photographies/la-figure-de-l-absence/">
-    <img class="" src="/img/works/la-figure-de-l-absence.jpg" srcset="/img/thumbs/la-figure-de-l-absence.jpg 900w, /img/works/la-figure-de-l-absence.jpg 2200w" sizes="(min-width: 900px) 46vw, 100vw" width="1466" height="2200" fetchpriority="high" decoding="async" alt="La Figure de l’absence">
+    <img src="/img/works/la-figure-de-l-absence.jpg" srcset="/img/thumbs/la-figure-de-l-absence.jpg 900w, /img/works/la-figure-de-l-absence.jpg 2200w" sizes="(min-width: 900px) 46vw, 100vw" width="1466" height="2200" fetchpriority="high" decoding="async" alt="La Figure de l’absence">
     <span class="cap"><em>La Figure de l’absence</em>, Sine-Saloum, 2019</span>
   </a>
 </section>
 
 <section class="home-expo"><div class="wrap">
   <a class="expo-card" href="/expositions/ce-qui-demeure/">
-    <img class="" src="/img/works/hors-saison.jpg" srcset="/img/thumbs/hors-saison.jpg 900w, /img/works/hors-saison.jpg 2200w" sizes="(min-width: 900px) 64vw, 100vw" width="2200" height="1466" loading="lazy" decoding="async" alt="Hors saison">
+    <img src="/img/works/hors-saison.jpg" srcset="/img/thumbs/hors-saison.jpg 900w, /img/works/hors-saison.jpg 2200w" sizes="(min-width: 900px) 64vw, 100vw" width="2200" height="1466" loading="lazy" decoding="async" alt="Hors saison">
     <div class="expo-text">
       <p class="kicker">Exposition · 2026</p>
       <h2>Ce Qui Demeure</h2>
@@ -57,14 +64,10 @@
 
 <section class="home-last"><div class="wrap">
   <a class="wide" href="/photographies/les-porteurs-de-lumiere/">
-    <img class="" src="/img/works/les-porteurs-de-lumiere.jpg" srcset="/img/thumbs/les-porteurs-de-lumiere.jpg 900w, /img/works/les-porteurs-de-lumiere.jpg 2200w" sizes="100vw" width="2200" height="1466" loading="lazy" decoding="async" alt="Les porteurs de lumière">
+    <img src="/img/works/les-porteurs-de-lumiere.jpg" srcset="/img/thumbs/les-porteurs-de-lumiere.jpg 900w, /img/works/les-porteurs-de-lumiere.jpg 2200w" sizes="100vw" width="2200" height="1466" loading="lazy" decoding="async" alt="Les porteurs de lumière">
     <span class="cap"><em>Les porteurs de lumière</em>, Shimoda, 2017</span>
   </a>
-  <div class="home-links">
-    <a href="/photographies/"><span class="kicker">Photographies</span><span class="big">Dix-huit images, 2017 - 2019</span></a>
-    <a href="/a-propos/"><span class="kicker">À propos</span><span class="big">Ingénieur, photographe, geek cowboy</span></a>
-    <a href="/contact/"><span class="kicker">Contact</span><span class="big">Écrire à l’artiste</span></a>
-  </div>
+  <div class="home-links"><a href="/photographies/"><span class="kicker">Photographies</span><span class="big">Dix-huit images, 2017 - 2019</span></a><a href="/a-propos/"><span class="kicker">À propos</span><span class="big">Ingénieur, photographe, geek cowboy</span></a><a href="/contact/"><span class="kicker">Contact</span><span class="big">Écrire à l’artiste</span></a></div>
 </div></section>
 
 </main>
@@ -75,7 +78,7 @@
 </div></footer>
 <script>
 const b=document.querySelector('.burger');b.addEventListener('click',()=>{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)});
-document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href});
+document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]'),c=document.querySelector('[data-close]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&c)location=c.href});
 </script>
 </body>
 </html>

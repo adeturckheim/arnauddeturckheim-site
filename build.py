@@ -1,6 +1,6 @@
-"""Génère le site statique arnauddeturckheim.com (pages en dossiers, URLs propres).
+"""Génère le site statique bilingue arnauddeturckheim.com : français à la racine, anglais sous /en/.
 
-Contenus : content.py et content/texte.txt (texte de Pierre El Khoury).
+Contenus : content.py, content/texte.txt (texte de Pierre El Khoury) et content/texte-en.txt (traduction).
 Images : img/works (2200 px) et img/thumbs (900 px), exportées depuis Expo/1 - Photos/3 - JPEG.
 Usage : python3 build.py
 """
@@ -10,11 +10,119 @@ import shutil
 import unicodedata
 from pathlib import Path
 
-from content import (BIO, EXCERPTS, EXPO, HOME_LEAD, MILESTONES, NB, PAPER, PORTRAIT_WORKS, SITE,
-                     STATEMENT, WORKS)
+import content as C
 
 HERE = Path(__file__).parent
-OUT_DIRS = ["photographies", "expositions", "a-propos", "contact"]
+FR_DIRS = ["photographies", "expositions", "a-propos", "contact"]
+CUR = ' aria-current="page"'
+
+# Routes : clé -> (chemin FR, chemin EN)
+ROUTES = {
+    "home": ("/", "/en/"),
+    "photos": ("/photographies/", "/en/photographs/"),
+    "expos": ("/expositions/", "/en/exhibitions/"),
+    "expo": ("/expositions/ce-qui-demeure/", "/en/exhibitions/ce-qui-demeure/"),
+    "about": ("/a-propos/", "/en/about/"),
+    "contact": ("/contact/", "/en/contact/"),
+    "404": ("/404.html", None),
+}
+
+T = {
+    "fr": {
+        "role": "Photographe", "nav": [("photos", "Photographies"), ("expos", "Expositions"),
+                                        ("about", "À propos"), ("contact", "Contact")],
+        "switch": "EN", "switch_label": "English version", "rights": "© 2026 · Toutes les images sont protégées",
+        "desc": "Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.",
+        "kicker_home": "Photographie", "see_photos": "Voir les photographies", "expo_kicker": "Exposition",
+        "discover": "Découvrir l’exposition", "quote": "Être là, regarder, attendre - puis laisser le réel continuer sans soi.",
+        "links": [("photos", "Photographies", "Dix-huit images, 2017 - 2019"),
+                  ("about", "À propos", "Ingénieur, photographe, geek cowboy"),
+                  ("contact", "Contact", "Écrire à l’artiste")],
+        "photos_title": "Photographies",
+        "photos_lead": "Japon, États-Unis, Allemagne, Maroc, Sénégal, France. Dix-huit images exposées pour la "
+                       "première fois dans {expo}, présentées ici dans l’ordre de l’accrochage.",
+        "photos_desc": "Dix-huit photographies d’Arnaud de Turckheim, 2017 - 2019 : Japon, États-Unis, Allemagne, Maroc, Sénégal, France.",
+        "print": "Tirage", "format": "Format", "edition": "Édition", "exhibition": "Exposition",
+        "unframed": "cm, hors cadre", "copies": "{n} exemplaires", "mounted": ", contrecollé sur aluminium",
+        "ask": "Se renseigner sur ce tirage", "all": "Toutes",
+        "work_desc": "{t}, {p}, {w}. Photographie d’Arnaud de Turckheim.",
+        "expos_title": "Expositions", "solo": "Exposition personnelle", "curated": "Commissariat de",
+        "by_artist": "Une exposition d’Arnaud de Turckheim",
+        "f_dates": "Dates", "f_opening": "Vernissage", "f_venue": "Lieu", "f_curator": "Commissariat",
+        "baobab_cap": "<em>La Figure de l’absence</em>, Sine-Saloum, 2019. L’image qui ouvre l’exposition.",
+        "works_kicker": "Les œuvres", "works_title": "Dix-huit tirages",
+        "works_note": "Tirages jet d’encre pigmentaire sur papier Hahnemühle Photo Rag Baryta, réalisés par Picto "
+                      "Bastille. Grands formats 80 × 120 cm, éditions de 3, contrecollés sur aluminium. Petits "
+                      "formats 40 × 60 cm, éditions de 5.",
+        "essay_kicker": "Texte", "essay_title": "Être là sans s’imposer",
+        "essay_by": "Par Pierre El Khoury, commissaire de l’exposition",
+        "info": "Informations", "artist": "Artiste", "curator_role": "Commissaire de l’exposition",
+        "expo_desc": "Ce Qui Demeure, première exposition personnelle d’Arnaud de Turckheim. {d}, {a}. Commissariat de Pierre El Khoury.",
+        "about_title": "À propos",
+        "about_lead": "Ingénieur de formation, photographe depuis les années 2000. Une pratique gardée privée "
+                      "pendant près de vingt ans, rendue publique en 2026.",
+        "statement_kicker": "Démarche", "statement_title": "Ce qui affleure dans l’ordinaire",
+        "cv_kicker": "Repères", "cv_title": "Parcours",
+        "about_desc": "Arnaud de Turckheim, ingénieur de formation et photographe, né à Paris en 1990. Bio et démarche.",
+        "portrait_alt": "Portrait d’Arnaud de Turckheim",
+        "contact_title": "Écrire",
+        "contact_lead": "Pour un tirage, une exposition, une publication ou simplement une conversation.",
+        "curator_of": "Commissariat de", "nf_title": "Rien ici", "nf_text": "Cette page n’existe pas, ou plus.",
+        "back_home": "Retour à l’accueil", "translated": "",
+    },
+    "en": {
+        "role": "Photographer", "nav": [("photos", "Photographs"), ("expos", "Exhibitions"),
+                                         ("about", "About"), ("contact", "Contact")],
+        "switch": "FR", "switch_label": "Version française", "rights": "© 2026 · All images are protected",
+        "desc": "Arnaud de Turckheim, photographer. First solo exhibition, Ce Qui Demeure, Paris, November 2026.",
+        "kicker_home": "Photography", "see_photos": "View the photographs", "expo_kicker": "Exhibition",
+        "discover": "Discover the exhibition", "quote": "To be there, to look, to wait - and then let reality go on without oneself.",
+        "links": [("photos", "Photographs", "Eighteen images, 2017 - 2019"),
+                  ("about", "About", "Engineer, photographer, geek cowboy"),
+                  ("contact", "Contact", "Write to the artist")],
+        "photos_title": "Photographs",
+        "photos_lead": "Japan, United States, Germany, Morocco, Senegal, France. Eighteen images shown for the "
+                       "first time in {expo}, presented here in the order of the hang.",
+        "photos_desc": "Eighteen photographs by Arnaud de Turckheim, 2017 - 2019: Japan, United States, Germany, Morocco, Senegal, France.",
+        "print": "Print", "format": "Size", "edition": "Edition", "exhibition": "Exhibition",
+        "unframed": "cm, unframed", "copies": "Edition of {n}", "mounted": ", mounted on aluminium",
+        "ask": "Enquire about this print", "all": "All",
+        "work_desc": "{t}, {p}, {w}. Photograph by Arnaud de Turckheim.",
+        "expos_title": "Exhibitions", "solo": "Solo exhibition", "curated": "Curated by",
+        "by_artist": "An exhibition by Arnaud de Turckheim",
+        "f_dates": "Dates", "f_opening": "Opening", "f_venue": "Venue", "f_curator": "Curator",
+        "baobab_cap": "<em>La Figure de l’absence</em>, Sine-Saloum, 2019. The image that opens the exhibition.",
+        "works_kicker": "The works", "works_title": "Eighteen prints",
+        "works_note": "Archival pigment prints on Hahnemühle Photo Rag Baryta paper, produced by Picto Bastille. "
+                      "Large formats 80 × 120 cm, editions of 3, mounted on aluminium. Small formats "
+                      "40 × 60 cm, editions of 5.",
+        "essay_kicker": "Essay", "essay_title": "To Be There Without Imposing",
+        "essay_by": "By Pierre El Khoury, curator of the exhibition",
+        "info": "Information", "artist": "Artist", "curator_role": "Curator of the exhibition",
+        "expo_desc": "Ce Qui Demeure, Arnaud de Turckheim’s first solo exhibition. {d}, {a}. Curated by Pierre El Khoury.",
+        "about_title": "About",
+        "about_lead": "An engineer by training, a photographer since the 2000s. A practice kept private for "
+                      "nearly twenty years, made public in 2026.",
+        "statement_kicker": "Statement", "statement_title": "What Surfaces in the Ordinary",
+        "cv_kicker": "Milestones", "cv_title": "Background",
+        "about_desc": "Arnaud de Turckheim, engineer by training and photographer, born in Paris in 1990. Biography and statement.",
+        "portrait_alt": "Portrait of Arnaud de Turckheim",
+        "contact_title": "Get in touch",
+        "contact_lead": "For a print, an exhibition, a publication, or simply a conversation.",
+        "curator_of": "Curator of", "nf_title": "Nothing here", "nf_text": "This page does not exist, or no longer does.",
+        "back_home": "Back to the homepage", "translated": "Translated from the French.",
+    },
+}
+
+DATA = {
+    "fr": dict(lead=C.HOME_LEAD, statement=C.STATEMENT, bio=C.BIO, miles=C.MILESTONES, excerpts=C.EXCERPTS,
+               paper=C.PAPER, dates=C.EXPO["dates"], opening="Mercredi 4 novembre", credits=C.EXPO["credits"],
+               expo_lead=C.EXPO["lead"], intro=C.EXPO["intro"], essay="texte.txt"),
+    "en": dict(lead=C.HOME_LEAD_EN, statement=C.STATEMENT_EN, bio=C.BIO_EN, miles=C.MILESTONES_EN,
+               excerpts=C.EXCERPTS_EN, paper=C.PAPER_EN, dates=C.EXPO_EN["dates"], opening=C.EXPO_EN["opening"],
+               credits=C.EXPO_EN["credits"], expo_lead=C.EXPO_EN["lead"], intro=C.EXPO_EN["intro"],
+               essay="texte-en.txt"),
+}
 
 
 def slug(title):
@@ -30,47 +138,67 @@ def esc(s):
     return html.escape(s, quote=True)
 
 
-def dims(title):
-    return (1466, 2200) if title in PORTRAIT_WORKS else (2200, 1466)
-
-
 def year(when):
     return when.split()[-1]
 
 
-def img(title, size="thumbs", sizes="100vw", cls="", eager=False):
+def when_l(when, L):
+    if L == "fr":
+        return when
+    m, y = when.split()
+    return f"{C.MONTHS_EN[m]} {y}"
+
+
+def country_l(c, L):
+    return c if L == "fr" else C.COUNTRIES_EN[c]
+
+
+def url(key, L):
+    return ROUTES[key][0 if L == "fr" else 1]
+
+
+def work_url(title, L):
+    return ("/photographies/" if L == "fr" else "/en/photographs/") + slug(title) + "/"
+
+
+def img(title, size="thumbs", sizes="100vw", eager=False):
     s = slug(title)
-    w, h = dims(title)
+    w, h = (1466, 2200) if title in C.PORTRAIT_WORKS else (2200, 1466)
     load = 'fetchpriority="high"' if eager else 'loading="lazy"'
-    return (f'<img class="{cls}" src="/img/{size}/{s}.jpg" '
-            f'srcset="/img/thumbs/{s}.jpg 900w, /img/works/{s}.jpg 2200w" sizes="{sizes}" '
-            f'width="{w}" height="{h}" {load} decoding="async" alt="{esc(typo(title))}">')
+    return (f'<img src="/img/{size}/{s}.jpg" srcset="/img/thumbs/{s}.jpg 900w, /img/works/{s}.jpg 2200w" '
+            f'sizes="{sizes}" width="{w}" height="{h}" {load} decoding="async" alt="{esc(typo(title))}">')
+
+
+def expo_link(L):
+    return f'<a href="{url("expo", L)}"><em>{C.EXPO["title"]}</em></a>'
 
 
 # ---------------------------------------------------------------- gabarit
 
-CUR = ' aria-current="page"'
-
-
-
-def page(path, title, body, *, desc="", active="", cls="", og_image="hors-saison"):
-    full = f"{title} · {SITE['name']}" if title else f"{SITE['name']} · Photographe"
-    desc = desc or "Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026."
-    nav = "".join(
-        f'<a href="/{p}/"{CUR if active == p else ""}>{label}</a>'
-        for p, label in [("photographies", "Photographies"), ("expositions", "Expositions"),
-                         ("a-propos", "À propos"), ("contact", "Contact")])
+def page(L, path, alt, title, body, *, desc="", active="", cls="", og_image="hors-saison"):
+    t = T[L]
+    full = f"{title} · {C.SITE['name']}" if title else f"{C.SITE['name']} · {t['role']}"
+    desc = desc or t["desc"]
+    nav = "".join(f'<a href="{url(k, L)}"{CUR if active == k else ""}>{label}</a>' for k, label in t["nav"])
+    other = "en" if L == "fr" else "fr"
+    switch = f'<a class="lang" href="{alt}" hreflang="{other}" lang="{other}" title="{t["switch_label"]}">{t["switch"]}</a>' if alt else ""
+    fr_path, en_path = (path, alt) if L == "fr" else (alt, path)
+    alternates = (f'<link rel="alternate" hreflang="fr" href="{C.SITE["url"]}{fr_path}">\n'
+                  f'<link rel="alternate" hreflang="en" href="{C.SITE["url"]}{en_path}">\n'
+                  f'<link rel="alternate" hreflang="x-default" href="{C.SITE["url"]}{fr_path}">') if alt else ""
     doc = f"""<!doctype html>
-<html lang="fr">
+<html lang="{L}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(full)}</title>
 <meta name="description" content="{esc(desc)}">
-<link rel="canonical" href="{SITE['url']}{path}">
+<link rel="canonical" href="{C.SITE['url']}{path}">
+{alternates}
 <meta property="og:title" content="{esc(full)}">
 <meta property="og:description" content="{esc(desc)}">
-<meta property="og:image" content="{SITE['url']}/img/works/{og_image}.jpg">
+<meta property="og:image" content="{C.SITE['url']}/img/works/{og_image}.jpg">
+<meta property="og:locale" content="{'fr_FR' if L == 'fr' else 'en_GB'}">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f1efe9">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -80,140 +208,145 @@ def page(path, title, body, *, desc="", active="", cls="", og_image="hors-saison
 </head>
 <body class="{cls}">
 <header class="top"><div class="wrap">
-  <a class="brand" href="/">Arnaud de Turckheim</a>
-  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
-  <nav>{nav}</nav>
+  <a class="brand" href="{url('home', L)}">Arnaud de Turckheim</a>
+  <div class="right">
+    <nav>{nav}</nav>
+    {switch}
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
 </div></header>
 <main>
 {body}
 </main>
 <footer class="foot"><div class="wrap">
-  <a class="brand" href="/">Arnaud de Turckheim</a>
-  <span><a href="mailto:{SITE['email']}">{SITE['email']}</a></span>
-  <span>© 2026 · Toutes les images sont protégées</span>
+  <a class="brand" href="{url('home', L)}">Arnaud de Turckheim</a>
+  <span><a href="mailto:{C.SITE['email']}">{C.SITE['email']}</a></span>
+  <span>{t['rights']}</span>
 </div></footer>
 <script>
 const b=document.querySelector('.burger');b.addEventListener('click',()=>{{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)}});
-document.addEventListener('keydown',e=>{{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href}});
+document.addEventListener('keydown',e=>{{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]'),c=document.querySelector('[data-close]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&c)location=c.href}});
 </script>
 </body>
 </html>
 """
-    out = HERE / path.strip("/") / "index.html" if path != "/404.html" else HERE / "404.html"
-    if path == "/":
-        out = HERE / "index.html"
+    out = HERE / ("404.html" if path == "/404.html" else path.strip("/") + "/index.html" if path != "/" else "index.html")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8")
 
 
+def alt_of(key, L):
+    return ROUTES[key][1 if L == "fr" else 0]
+
+
 # ---------------------------------------------------------------- pages
 
-def home():
-    w = {t[0]: t for t in WORKS}
-    baobab, pool, porters = w["La Figure de l'absence"], w["Hors saison"], w["Les porteurs de lumière"]
+def home(L):
+    t, d = T[L], DATA[L]
+    w = {x[0]: x for x in C.WORKS}
+    baobab, porters = w["La Figure de l'absence"], w["Les porteurs de lumière"]
+    links = "".join(f'<a href="{url(k, L)}"><span class="kicker">{a}</span><span class="big">{b}</span></a>'
+                    for k, a, b in t["links"])
     body = f"""
 <section class="home-hero">
   <div class="home-intro">
-    <p class="kicker">Photographie</p>
+    <p class="kicker">{t['kicker_home']}</p>
     <h1>Arnaud<br>de Turckheim</h1>
-    <p class="lead">{HOME_LEAD}</p>
-    <p class="links"><a class="arrow" href="/photographies/">Voir les photographies</a></p>
+    <p class="lead">{d['lead']}</p>
+    <p class="links"><a class="arrow" href="{url('photos', L)}">{t['see_photos']}</a></p>
   </div>
-  <a class="home-baobab" href="/photographies/{slug(baobab[0])}/">
+  <a class="home-baobab" href="{work_url(baobab[0], L)}">
     {img(baobab[0], "works", "(min-width: 900px) 46vw, 100vw", eager=True)}
     <span class="cap"><em>{typo(baobab[0])}</em>, {baobab[1]}, {year(baobab[3])}</span>
   </a>
 </section>
 
 <section class="home-expo"><div class="wrap">
-  <a class="expo-card" href="/expositions/{EXPO['slug']}/">
-    {img(pool[0], "works", "(min-width: 900px) 64vw, 100vw")}
+  <a class="expo-card" href="{url('expo', L)}">
+    {img("Hors saison", "works", "(min-width: 900px) 64vw, 100vw")}
     <div class="expo-text">
-      <p class="kicker">Exposition · {EXPO['year']}</p>
-      <h2>{EXPO['title']}</h2>
-      <p class="meta">{EXPO['dates']}<br>{EXPO['address']}</p>
-      <p>{EXPO['lead']}</p>
-      <span class="arrow">Découvrir l’exposition</span>
+      <p class="kicker">{t['expo_kicker']} · {C.EXPO['year']}</p>
+      <h2>{C.EXPO['title']}</h2>
+      <p class="meta">{d['dates']}<br>{C.EXPO['address']}</p>
+      <p>{d['expo_lead']}</p>
+      <span class="arrow">{t['discover']}</span>
     </div>
   </a>
 </div></section>
 
 <section class="home-statement"><div class="wrap narrow">
-  <blockquote>Être là, regarder, attendre - puis laisser le réel continuer sans soi.</blockquote>
+  <blockquote>{t['quote']}</blockquote>
   <p class="attr">Pierre El Khoury, <em>Ce Qui Demeure</em></p>
 </div></section>
 
 <section class="home-last"><div class="wrap">
-  <a class="wide" href="/photographies/{slug(porters[0])}/">
+  <a class="wide" href="{work_url(porters[0], L)}">
     {img(porters[0], "works", "100vw")}
     <span class="cap"><em>{typo(porters[0])}</em>, {porters[1]}, {year(porters[3])}</span>
   </a>
-  <div class="home-links">
-    <a href="/photographies/"><span class="kicker">Photographies</span><span class="big">Dix-huit images, 2017 - 2019</span></a>
-    <a href="/a-propos/"><span class="kicker">À propos</span><span class="big">Ingénieur, photographe, geek cowboy</span></a>
-    <a href="/contact/"><span class="kicker">Contact</span><span class="big">Écrire à l’artiste</span></a>
-  </div>
+  <div class="home-links">{links}</div>
 </div></section>
 """
-    page("/", "", body, cls="is-home", og_image=slug(baobab[0]))
+    page(L, url("home", L), alt_of("home", L), "", body, cls="is-home", og_image=slug(baobab[0]))
 
 
-def photographies():
+def photographies(L):
+    t = T[L]
     items = "".join(f"""
-    <a class="tile" href="/photographies/{slug(t[0])}/">
-      {img(t[0], "thumbs", "(min-width: 1100px) 30vw, (min-width: 640px) 45vw, 100vw")}
-      <span class="t"><em>{typo(t[0])}</em></span>
-      <span class="m">{t[1]}, {year(t[3])}</span>
-    </a>""" for t in WORKS)
+    <a class="tile" href="{work_url(x[0], L)}">
+      {img(x[0], "thumbs", "(min-width: 1100px) 30vw, (min-width: 640px) 45vw, 100vw")}
+      <span class="t"><em>{typo(x[0])}</em></span>
+      <span class="m">{x[1]}, {year(x[3])}</span>
+    </a>""" for x in C.WORKS)
     body = f"""
 <section class="page-head"><div class="wrap">
-  <p class="kicker">Photographies</p>
+  <p class="kicker">{t['photos_title']}</p>
   <h1>2017 - 2019</h1>
-  <p class="lead">Japon, États-Unis, Allemagne, Maroc, Sénégal, France. Dix-huit images exposées pour la
-  première fois dans <a href="/expositions/{EXPO['slug']}/"><em>{EXPO['title']}</em></a>, présentées ici dans
-  l’ordre de l’accrochage.</p>
+  <p class="lead">{t['photos_lead'].format(expo=expo_link(L))}</p>
 </div></section>
 <section class="grid-wrap"><div class="wrap"><div class="masonry">{items}
 </div></div></section>
 """
-    page("/photographies/", "Photographies", body, active="photographies",
-         desc="Dix-huit photographies d’Arnaud de Turckheim, 2017 - 2019 : Japon, États-Unis, Allemagne, Maroc, Sénégal, France.")
+    page(L, url("photos", L), alt_of("photos", L), t["photos_title"], body, active="photos", desc=t["photos_desc"])
 
 
-def work_pages():
-    n = len(WORKS)
-    for i, (title, place, country, when, fmt, ed) in enumerate(WORKS):
-        prev, nxt = WORKS[(i - 1) % n], WORKS[(i + 1) % n]
-        support = PAPER + (", contrecollé sur aluminium" if ed == 3 else "")
+def work_pages(L):
+    t, d = T[L], DATA[L]
+    n = len(C.WORKS)
+    for i, (title, place, country, when, fmt, ed) in enumerate(C.WORKS):
+        prev, nxt = C.WORKS[(i - 1) % n], C.WORKS[(i + 1) % n]
+        support = d["paper"] + (t["mounted"] if ed == 3 else "")
         quote = ""
-        if title in EXCERPTS:
-            quote = f"""<blockquote class="excerpt">{EXCERPTS[title]}<cite>Pierre El Khoury</cite></blockquote>"""
-        kind = "port" if title in PORTRAIT_WORKS else "land"
+        if title in d["excerpts"]:
+            quote = f'<blockquote class="excerpt">{d["excerpts"][title]}<cite>Pierre El Khoury</cite></blockquote>'
+        kind = "port" if title in C.PORTRAIT_WORKS else "land"
+        w = when_l(when, L)
         body = f"""
 <article class="work-page {kind}">
   <figure class="work-img"><a href="/img/works/{slug(title)}.jpg" class="zoom">{img(title, "works", "(min-width: 1000px) 70vw, 100vw", eager=True)}</a></figure>
   <aside class="work-info">
     <p class="kicker">{i + 1:02d} / {n}</p>
     <h1>{typo(title)}</h1>
-    <p class="place">{place}, {country}<br>{when.capitalize()}</p>
+    <p class="place">{place}, {country_l(country, L)}<br>{w[0].upper() + w[1:]}</p>
     {quote}
     <dl>
-      <div><dt>Tirage</dt><dd>{support}</dd></div>
-      <div><dt>Format</dt><dd>{fmt} cm, hors cadre</dd></div>
-      <div><dt>Édition</dt><dd>{ed} exemplaires</dd></div>
-      <div><dt>Exposition</dt><dd><a href="/expositions/{EXPO['slug']}/"><em>{EXPO['title']}</em></a>, Paris, {EXPO['year']}</dd></div>
+      <div><dt>{t['print']}</dt><dd>{support}</dd></div>
+      <div><dt>{t['format']}</dt><dd>{fmt} {t['unframed']}</dd></div>
+      <div><dt>{t['edition']}</dt><dd>{t['copies'].format(n=ed)}</dd></div>
+      <div><dt>{t['exhibition']}</dt><dd>{expo_link(L)}, Paris, {C.EXPO['year']}</dd></div>
     </dl>
-    <p class="ask"><a class="arrow" href="mailto:{SITE['email']}?subject={esc(typo(title))}">Se renseigner sur ce tirage</a></p>
+    <p class="ask"><a class="arrow" href="mailto:{C.SITE['email']}?subject={esc(typo(title))}">{t['ask']}</a></p>
     <nav class="pager">
-      <a data-prev href="/photographies/{slug(prev[0])}/">← <em>{typo(prev[0])}</em></a>
-      <a data-close href="/photographies/">Toutes</a>
-      <a data-next href="/photographies/{slug(nxt[0])}/"><em>{typo(nxt[0])}</em> →</a>
+      <a data-prev href="{work_url(prev[0], L)}">← <em>{typo(prev[0])}</em></a>
+      <a data-close href="{url('photos', L)}">{t['all']}</a>
+      <a data-next href="{work_url(nxt[0], L)}"><em>{typo(nxt[0])}</em> →</a>
     </nav>
   </aside>
 </article>
 """
-        page(f"/photographies/{slug(title)}/", typo(title), body, active="photographies", cls="is-work",
-             desc=f"{typo(title)}, {place}, {when}. Photographie d’Arnaud de Turckheim.", og_image=slug(title))
+        page(L, work_url(title, L), work_url(title, "en" if L == "fr" else "fr"), typo(title), body,
+             active="photos", cls="is-work", desc=t["work_desc"].format(t=typo(title), p=place, w=w),
+             og_image=slug(title))
 
 
 TEXT_TITLES = ["La Figure de l’absence", "Ce Qui Demeure", "Les Revenantes", "Les Porteurs de lumière",
@@ -222,173 +355,175 @@ TEXT_TITLES = ["La Figure de l’absence", "Ce Qui Demeure", "Les Revenantes", "
 SUP = {"¹": "1", "²": "2", "³": "3", "⁴": "4"}
 
 
-def essay():
-    body, notes = (HERE / "content" / "texte.txt").read_text().split("---NOTES---")
+def essay(L):
+    body, notes = (HERE / "content" / DATA[L]["essay"]).read_text().split("---NOTES---")
 
-    def rich(t):
-        t = html.escape(t, quote=False)
+    def rich(x):
+        x = html.escape(x, quote=False)
         for title in TEXT_TITLES:
-            t = t.replace(title, f"<em>{title}</em>")
-        return t
+            x = x.replace(title, f"<em>{title}</em>")
+        return x
 
     paras = []
     for b in body.strip().split("\n\n"):
-        t = rich(" ".join(b.split()))
+        x = rich(" ".join(b.split()))
         for k, v in SUP.items():
-            t = t.replace(k, f'<sup><a href="#note-{v}" id="ref-{v}">{v}</a></sup>')
-        paras.append(f"<p>{t}</p>")
-    items = []
-    for n in notes.strip().split("\n\n"):
-        n = n.strip()
-        v = SUP[n[0]]
-        items.append(f'<li id="note-{v}"><a href="#ref-{v}">{v}</a> {rich(n[1:].strip())}</li>')
+            x = x.replace(k, f'<sup><a href="#note-{v}" id="ref-{v}">{v}</a></sup>')
+        paras.append(f"<p>{x}</p>")
+    items = [f'<li id="note-{SUP[n.strip()[0]]}"><a href="#ref-{SUP[n.strip()[0]]}">{SUP[n.strip()[0]]}</a> '
+             f'{rich(n.strip()[1:].strip())}</li>' for n in notes.strip().split("\n\n") if n.strip()]
     return "".join(paras), "".join(items)
 
 
-def expositions():
+def expositions(L):
+    t, d = T[L], DATA[L]
     body = f"""
 <section class="page-head"><div class="wrap">
-  <p class="kicker">Expositions</p>
-  <h1>Expositions</h1>
+  <p class="kicker">{t['expos_title']}</p>
+  <h1>{t['expos_title']}</h1>
 </div></section>
 <section><div class="wrap">
-  <a class="expo-row" href="/expositions/{EXPO['slug']}/">
-    <span class="y">{EXPO['year']}</span>
-    <span class="t"><em>{EXPO['title']}</em></span>
-    <span class="m">Exposition personnelle · {EXPO['address']}<br>Commissariat de {EXPO['curator']}</span>
+  <a class="expo-row" href="{url('expo', L)}">
+    <span class="y">{C.EXPO['year']}</span>
+    <span class="t"><em>{C.EXPO['title']}</em></span>
+    <span class="m">{t['solo']} · {C.EXPO['address']}<br>{t['curated']} {C.EXPO['curator']}</span>
     {img("Hors saison", "thumbs", "240px")}
   </a>
 </div></section>
 """
-    page("/expositions/", "Expositions", body, active="expositions")
+    page(L, url("expos", L), alt_of("expos", L), t["expos_title"], body, active="expos")
 
-    paras, notes = essay()
-    intro = "".join(f"<p>{p}</p>" for p in EXPO["intro"])
+    paras, notes = essay(L)
+    intro = "".join(f"<p>{p}</p>" for p in d["intro"])
     works = "".join(f"""
-      <a class="tile" href="/photographies/{slug(t[0])}/">
-        {img(t[0], "thumbs", "(min-width: 900px) 22vw, 45vw")}
-        <span class="t"><em>{typo(t[0])}</em></span><span class="m">{t[1]}, {year(t[3])}</span>
-      </a>""" for t in WORKS)
-    credits = " · ".join(EXPO["credits"])
+      <a class="tile" href="{work_url(x[0], L)}">
+        {img(x[0], "thumbs", "(min-width: 900px) 22vw, 45vw")}
+        <span class="t"><em>{typo(x[0])}</em></span><span class="m">{x[1]}, {year(x[3])}</span>
+      </a>""" for x in C.WORKS)
+    credits = " · ".join(d["credits"])
+    translated = f'<p class="translated">{t["translated"]}</p>' if t["translated"] else ""
     body = f"""
 <section class="expo-hero">
   {img("Hors saison", "works", "100vw", eager=True)}
 </section>
 <section class="expo-band"><div class="wrap">
-  <div><p class="kicker">Exposition personnelle · {EXPO['year']}</p><h1>{EXPO['title']}</h1>
-    <p class="sub">Une exposition d’Arnaud de Turckheim</p></div>
+  <div><p class="kicker">{t['solo']} · {C.EXPO['year']}</p><h1>{C.EXPO['title']}</h1>
+    <p class="sub">{t['by_artist']}</p></div>
   <dl class="facts">
-    <div><dt>Dates</dt><dd>{EXPO['dates']}</dd></div>
-    <div><dt>Vernissage</dt><dd>Mercredi 4 novembre</dd></div>
-    <div><dt>Lieu</dt><dd>{EXPO['address']}</dd></div>
-    <div><dt>Commissariat</dt><dd>{EXPO['curator']}</dd></div>
+    <div><dt>{t['f_dates']}</dt><dd>{d['dates']}</dd></div>
+    <div><dt>{t['f_opening']}</dt><dd>{d['opening']}</dd></div>
+    <div><dt>{t['f_venue']}</dt><dd>{C.EXPO['address']}</dd></div>
+    <div><dt>{t['f_curator']}</dt><dd>{C.EXPO['curator']}</dd></div>
   </dl>
 </div></section>
 
 <section class="expo-intro"><div class="wrap two">
-  <p class="lead">{EXPO['lead']}</p>
+  <p class="lead">{d['expo_lead']}</p>
   <div class="prose">{intro}</div>
 </div></section>
 
 <section class="expo-baobab"><div class="wrap">
   <figure>{img("La Figure de l'absence", "works", "(min-width: 900px) 40vw, 90vw")}
-    <figcaption><em>La Figure de l’absence</em>, Sine-Saloum, 2019. L’image qui ouvre l’exposition.</figcaption></figure>
+    <figcaption>{t['baobab_cap']}</figcaption></figure>
 </div></section>
 
 <section class="expo-works"><div class="wrap">
-  <p class="kicker">Les œuvres</p><h2>Dix-huit tirages</h2>
-  <p class="note">Tirages jet d’encre pigmentaire sur papier Hahnemühle Photo Rag Baryta, réalisés par Picto Bastille.
-  Grands formats 80 × 120 cm, éditions de 3, contrecollés sur aluminium. Petits formats 40 × 60 cm, éditions de 5.</p>
+  <p class="kicker">{t['works_kicker']}</p><h2>{t['works_title']}</h2>
+  <p class="note">{t['works_note']}</p>
   <div class="mini-grid">{works}
   </div>
 </div></section>
 
 <section class="essay" id="texte"><div class="wrap">
-  <div class="essay-head"><p class="kicker">Texte</p><h2>Être là sans s’imposer</h2>
-    <p class="by">Par Pierre El Khoury, commissaire de l’exposition</p></div>
+  <div class="essay-head"><p class="kicker">{t['essay_kicker']}</p><h2>{t['essay_title']}</h2>
+    <p class="by">{t['essay_by']}</p>{translated}</div>
   <div class="essay-body">{paras}<p class="sig">Pierre El Khoury</p></div>
   <ol class="notes">{notes}</ol>
 </div></section>
 
 <section class="expo-contact"><div class="wrap two">
-  <div><p class="kicker">Informations</p><h2>Contact</h2></div>
+  <div><p class="kicker">{t['info']}</p><h2>Contact</h2></div>
   <div class="contact-list">
-    <div><p class="who">Arnaud de Turckheim</p><p class="role">Artiste</p><a href="mailto:{SITE['email']}">{SITE['email']}</a></div>
-    <div><p class="who">Pierre El Khoury</p><p class="role">Commissaire de l’exposition</p><a href="mailto:{EXPO['curator_email']}">{EXPO['curator_email']}</a></div>
+    <div><p class="who">Arnaud de Turckheim</p><p class="role">{t['artist']}</p><a href="mailto:{C.SITE['email']}">{C.SITE['email']}</a></div>
+    <div><p class="who">Pierre El Khoury</p><p class="role">{t['curator_role']}</p><a href="mailto:{C.EXPO['curator_email']}">{C.EXPO['curator_email']}</a></div>
     <p class="credits">{credits}</p>
   </div>
 </div></section>
 """
-    page(f"/expositions/{EXPO['slug']}/", EXPO["title"], body, active="expositions", cls="is-expo",
-         desc=f"Ce Qui Demeure, première exposition personnelle d’Arnaud de Turckheim. {EXPO['dates']}, {EXPO['address']}. Commissariat de Pierre El Khoury.")
+    page(L, url("expo", L), alt_of("expo", L), C.EXPO["title"], body, active="expos", cls="is-expo",
+         desc=t["expo_desc"].format(d=d["dates"], a=C.EXPO["address"]))
 
 
-def about():
-    bio = "".join(f"<p>{p}</p>" for p in BIO)
-    statement = "".join(f"<p>{p}</p>" for p in STATEMENT)
-    miles = "".join(f"<div><dt>{a}</dt><dd>{b}</dd></div>" for a, b in MILESTONES)
+def about(L):
+    t, d = T[L], DATA[L]
+    bio = "".join(f"<p>{p}</p>" for p in d["bio"])
+    statement = "".join(f"<p>{p}</p>" for p in d["statement"])
+    miles = "".join(f"<div><dt>{a}</dt><dd>{b}</dd></div>" for a, b in d["miles"])
+    strip = "".join(f'<a href="{work_url(x, L)}">{img(x, "thumbs", "33vw")}</a>'
+                    for x in ["Les revenantes", "Le songe éveillé", "La charpente du monde"])
     body = f"""
 <section class="about-head"><div class="wrap about-grid">
-  <figure class="portrait"><img src="/img/portrait.jpg" width="900" height="900" alt="Portrait d’Arnaud de Turckheim" fetchpriority="high"></figure>
+  <figure class="portrait"><img src="/img/portrait.jpg" width="900" height="900" alt="{t['portrait_alt']}" fetchpriority="high"></figure>
   <div>
-    <p class="kicker">À propos</p>
+    <p class="kicker">{t['about_title']}</p>
     <h1>Arnaud de Turckheim</h1>
-    <p class="lead">Ingénieur de formation, photographe depuis les années 2000. Une pratique gardée privée
-    pendant près de vingt ans, rendue publique en 2026.</p>
+    <p class="lead">{t['about_lead']}</p>
     <div class="prose">{bio}</div>
   </div>
 </div></section>
 
 <section class="statement"><div class="wrap two">
-  <div><p class="kicker">Démarche</p><h2>Ce qui affleure dans l’ordinaire</h2></div>
+  <div><p class="kicker">{t['statement_kicker']}</p><h2>{t['statement_title']}</h2></div>
   <div class="prose">{statement}</div>
 </div></section>
 
-<section class="strip"><div class="wrap strip-row">
-  {"".join(f'<a href="/photographies/{slug(t)}/">{img(t, "thumbs", "33vw")}</a>' for t in ["Les revenantes", "Le songe éveillé", "La charpente du monde"])}
-</div></section>
+<section class="strip"><div class="wrap strip-row">{strip}</div></section>
 
 <section class="cv"><div class="wrap two">
-  <div><p class="kicker">Repères</p><h2>Parcours</h2></div>
+  <div><p class="kicker">{t['cv_kicker']}</p><h2>{t['cv_title']}</h2></div>
   <dl class="facts">{miles}</dl>
 </div></section>
 """
-    page("/a-propos/", "À propos", body, active="a-propos",
-         desc="Arnaud de Turckheim, ingénieur de formation et photographe, né à Paris en 1990. Bio et démarche.")
+    page(L, url("about", L), alt_of("about", L), t["about_title"], body, active="about", desc=t["about_desc"])
 
 
-def contact():
+def contact(L):
+    t = T[L]
     body = f"""
 <section class="contact-page"><div class="wrap contact-grid">
   <div>
     <p class="kicker">Contact</p>
-    <h1>Écrire</h1>
-    <p class="lead">Pour un tirage, une exposition, une publication ou simplement une conversation.</p>
-    <p class="mail"><a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
+    <h1>{t['contact_title']}</h1>
+    <p class="lead">{t['contact_lead']}</p>
+    <p class="mail"><a href="mailto:{C.SITE['email']}">{C.SITE['email']}</a></p>
     <div class="curator">
-      <p class="kicker">Commissariat de <em>{EXPO['title']}</em></p>
+      <p class="kicker">{t['curator_of']} <em>{C.EXPO['title']}</em></p>
       <p class="who">Pierre El Khoury</p>
-      <a href="mailto:{EXPO['curator_email']}">{EXPO['curator_email']}</a>
+      <a href="mailto:{C.EXPO['curator_email']}">{C.EXPO['curator_email']}</a>
     </div>
   </div>
-  <a class="contact-img" href="/photographies/l-attente/">{img("L'attente", "works", "(min-width: 900px) 40vw, 100vw")}</a>
+  <a class="contact-img" href="{work_url("L'attente", L)}">{img("L'attente", "works", "(min-width: 900px) 40vw, 100vw")}</a>
 </div></section>
 """
-    page("/contact/", "Contact", body, active="contact")
+    page(L, url("contact", L), alt_of("contact", L), "Contact", body, active="contact")
 
 
 def not_found():
+    fr, en = T["fr"], T["en"]
     body = f"""<section class="page-head"><div class="wrap">
-  <p class="kicker">404</p><h1>Rien ici</h1>
-  <p class="lead">Cette page n’existe pas, ou plus. <a href="/">Retour à l’accueil</a>.</p>
+  <p class="kicker">404</p><h1>{fr['nf_title']}</h1>
+  <p class="lead">{fr['nf_text']} <a href="/">{fr['back_home']}</a>.</p>
+  <p class="lead" lang="en">{en['nf_text']} <a href="/en/">{en['back_home']}</a>.</p>
 </div></section>"""
-    page("/404.html", "Page introuvable", body)
+    page("fr", "/404.html", None, "Page introuvable", body)
 
 
 def main():
-    for d in OUT_DIRS:
+    for d in FR_DIRS + ["en"]:
         shutil.rmtree(HERE / d, ignore_errors=True)
-    home(); photographies(); work_pages(); expositions(); about(); contact(); not_found()
+    for L in ("fr", "en"):
+        home(L); photographies(L); work_pages(L); expositions(L); about(L); contact(L)
+    not_found()
     print("ok :", len(list(HERE.rglob("index.html"))) + 1, "pages")
 
 

@@ -1,6 +1,8 @@
 # arnauddeturckheim.com
 
-Site d'artiste statique d'Arnaud de Turckheim, sans framework, généré par `build.py`.
+Site d'artiste statique et bilingue d'Arnaud de Turckheim, sans framework, généré par `build.py`.
+Français à la racine, anglais sous `/en/` (`/en/photographs/`, `/en/exhibitions/`, `/en/about/`, `/en/contact/`).
+Les titres des œuvres restent en français dans les deux versions.
 
 ## Pages
 
@@ -14,7 +16,9 @@ Aucun prix ni numéro de téléphone sur le site.
 
 ## Fichiers
 
-- `content.py` : tous les textes éditoriaux et la liste des œuvres
+- `content.py` : textes éditoriaux FR puis EN, et la liste des œuvres
+- `build.py` : aussi les libellés d'interface FR/EN (dictionnaire `T`)
+- `content/texte-en.txt` : traduction anglaise du texte de Pierre
 - `content/texte.txt` : texte de Pierre (copie de `Expo/8 - Texte exposition/texte.txt` sur le Drive)
 - `style.css`, `favicon.svg`
 - `img/works` (2200 px) et `img/thumbs` (900 px), exportés depuis `Expo/1 - Photos/3 - JPEG`

@@ -120,3 +120,83 @@ EXPO = {
         "Une première monstration, et le début d’une conversation.",
     ],
 }
+
+
+# ================================================================ English
+# Titres des œuvres conservés en français (usage des galeries) ; tout le reste est traduit.
+
+MONTHS_EN = {"janvier": "January", "février": "February", "mars": "March", "avril": "April", "mai": "May",
+             "juin": "June", "juillet": "July", "août": "August", "septembre": "September",
+             "octobre": "October", "novembre": "November", "décembre": "December"}
+COUNTRIES_EN = {"Japon": "Japan", "Allemagne": "Germany", "France": "France", "États-Unis": "United States",
+                "Maroc": "Morocco", "Sénégal": "Senegal"}
+PAPER_EN = "Archival pigment print on Hahnemühle Photo Rag Baryta 315 gsm paper"
+
+EXCERPTS_EN = {
+    "La Figure de l'absence": "A century-old baobab standing alone against the light.",
+    "Les porteurs de lumière": "The figures of the workers and their shadows answer one another, opening a "
+                               "space between the living and its trace.",
+    "Les revenantes": "The shadow seems to keep the memory of a body.",
+    "Hors saison": "The empty swimming pool seems deprived of its usual function.",
+    "L'apparition": "Grain and photographic texture contribute to the presence of the subject.",
+    "La Gardienne": "A zone of opacity that leaves the face its freedom and its mystery.",
+    "Le songe éveillé": "The portraits do not seek to reveal everything: they preserve a share of withdrawal.",
+    "La traversée": "Movement does not become a pretext for telling a travel story, but an occasion to seize "
+                    "an instant whose meaning remains open.",
+    "Le détour": "To seize an instant whose meaning remains open.",
+}
+
+HOME_LEAD_EN = "Images found rather than made: a gesture, a light, a geometry surfacing in the ordinary."
+
+STATEMENT_EN = [
+    "Arnaud de Turckheim photographs what offers itself without being asked for. His images are born "
+    "neither of a commission nor of staging: two workers and their shadows on a platform in Shimoda, a "
+    "level crossing in Nakano, an empty swimming pool in Los Angeles, a baobab in the Sine-Saloum. "
+    "Nothing spectacular, only the precise moment when the ordinary tips over.",
+    "His eye refuses the picturesque. No folkloric Japan, no postcard Africa, no movie-set America: he "
+    "looks for the blind spot of the cliché. Often a single figure holds a wide frame. Light, raking or "
+    "backlit, sculpts as much as it reveals. The images breathe rather than speak.",
+    "These are digital photographs, honest ones, framed by the eye and not by a model. Made before the "
+    "generative shift, they belong to a time when an image was found rather than generated.",
+]
+
+BIO_EN = [
+    "Born in Paris in 1990, Arnaud de Turckheim grew up between Paris and Provence, in a family where the "
+    "image is a familiar language: his mother is a photographer. An engineer by training, he lived in "
+    "China, England and then Japan before returning to France in 2017.",
+    "He has been taking photographs since the 2000s. A practice long kept to himself, nearly twenty years "
+    "of images held back, which he makes public for the first time in November 2026 with "
+    "<em>Ce Qui Demeure</em>, curated by Pierre El Khoury.",
+    "From his nomadic years he has kept a taste for discreet observation. Friends readily describe him as "
+    "a “geek cowboy”, torn between the engineer’s logic and the pull of wide open spaces. His style is "
+    "recognisable: sustained backlight, raking light, frank contrasts, shades of grey and green.",
+    "One word often comes up about his work: <em>intense</em>. It speaks to the way he stands before his "
+    "subjects, both inside and outside the moment, in that attentive in-between that makes photography.",
+]
+
+MILESTONES_EN = [
+    ("1990", "Born in Paris."),
+    ("2000s", "First photographs, a practice kept private."),
+    ("Before 2017", "Lives in China, England and then Japan."),
+    ("2017", "Returns to France."),
+    ("2026", "<em>Ce Qui Demeure</em>, first solo exhibition, Paris."),
+]
+
+EXPO_EN = {
+    "dates": "4 - 19 November 2026",
+    "opening": "Wednesday 4 November",
+    "credits": ["Curated by Pierre El Khoury", "Venue courtesy of Roka", "Prints by Picto Bastille, Paris"],
+    "lead": "Arnaud de Turckheim’s first solo exhibition. Eighteen photographs, one question: what remains "
+            "when everything keeps passing?",
+    "intro": [
+        "Eighteen prints, taken between 2017 and 2019 in Japan, the United States, Germany, Morocco, "
+        "Senegal and France. Yet the exhibition follows neither a geography nor a chronology: the images "
+        "detach themselves from their place and answer one another.",
+        "It opens on a century-old baobab, <em>La Figure de l’absence</em>, a silent presence that sets "
+        "the tone: to be there without imposing oneself. Then come portraits that keep their share of "
+        "shadow, street scenes caught in their off hours, forms made strange by light.",
+        "<em>Ce Qui Demeure</em> (What Remains) is assumed as a pre-AI exhibition: the image as it was made "
+        "before the generative shift, framed by a gaze and not by a model. A first showing, and the "
+        "beginning of a conversation.",
+    ],
+}
