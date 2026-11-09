@@ -89,9 +89,10 @@ BIO = [
 
 MILESTONES = [
     ("1990", "Naissance à Paris."),
-    ("Années 2000", "Premières photographies, une pratique tenue privée."),
-    ("Avant 2017", "Vit en Chine, en Angleterre puis au Japon."),
-    ("2017", "Retour en France."),
+    ("Années 2000", "Premières photographies, une pratique gardée privée."),
+    ("Années 2010", "Études d’ingénieur et premières années dans la tech. Vit en Chine, en Angleterre et au "
+                    "Japon. La décennie où naissent la plupart de ses images."),
+    ("2020", "Fonde sa propre entreprise."),
     ("2026", "<em>Ce Qui Demeure</em>, première exposition personnelle, Paris."),
 ]
 
@@ -108,7 +109,7 @@ EXPO = {
     "lead": "Première exposition personnelle d’Arnaud de Turckheim. Dix-huit photographies, une même "
             "question" + NB + ": qu’est-ce qui demeure lorsque tout continue de passer" + NB + "?",
     "intro": [
-        "Dix-huit tirages, pris entre 2017 et 2019 au Japon, aux États-Unis, en Allemagne, au Maroc, "
+        "Dix-huit tirages, pris au Japon, aux États-Unis, en Allemagne, au Maroc, "
         "au Sénégal et en France. L’exposition ne suit pourtant ni une géographie ni une chronologie"
         + NB + ": les images se détachent de leur lieu pour se répondre les unes aux autres.",
         "Elle s’ouvre sur un baobab centenaire, <em>La Figure de l’absence</em>, présence silencieuse "
@@ -177,8 +178,9 @@ BIO_EN = [
 MILESTONES_EN = [
     ("1990", "Born in Paris."),
     ("2000s", "First photographs, a practice kept private."),
-    ("Before 2017", "Lives in China, England and then Japan."),
-    ("2017", "Returns to France."),
+    ("2010s", "Engineering studies and first years in tech. Lives in China, England and Japan. The decade "
+              "in which most of his images are made."),
+    ("2020", "Founds his own company."),
     ("2026", "<em>Ce Qui Demeure</em>, first solo exhibition, Paris."),
 ]
 
@@ -189,7 +191,7 @@ EXPO_EN = {
     "lead": "Arnaud de Turckheim’s first solo exhibition. Eighteen photographs, one question: what remains "
             "when everything keeps passing?",
     "intro": [
-        "Eighteen prints, taken between 2017 and 2019 in Japan, the United States, Germany, Morocco, "
+        "Eighteen prints, taken in Japan, the United States, Germany, Morocco, "
         "Senegal and France. Yet the exhibition follows neither a geography nor a chronology: the images "
         "detach themselves from their place and answer one another.",
         "It opens on a century-old baobab, <em>La Figure de l’absence</em>, a silent presence that sets "
