@@ -21,7 +21,8 @@ Aucun prix ni numéro de téléphone sur le site.
 - `content/texte-en.txt` : traduction anglaise du texte de Pierre
 - `content/texte.txt` : texte de Pierre (copie de `Expo/8 - Texte exposition/texte.txt` sur le Drive)
 - `style.css`, `favicon.svg`
-- `img/works` (2200 px) et `img/thumbs` (900 px), exportés depuis `Expo/1 - Photos/3 - JPEG`
+- `img/large` (3200 px, visionneuse sur grands écrans), `img/works` (2200 px) et `img/thumbs` (900 px), exportés depuis `Expo/1 - Photos/3 - JPEG`
+- `viewer.js` : visionneuse (clavier, clic, swipe, plein écran avec F, lien direct #titre)
 - `CNAME` : domaine personnalisé pour GitHub Pages
 
 ## Mettre à jour

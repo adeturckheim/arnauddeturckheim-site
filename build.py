@@ -46,7 +46,7 @@ T = {
         "photos_desc": "Photographies d’Arnaud de Turckheim : Japon, États-Unis, Allemagne, Maroc, Sénégal, France.",
         "print": "Tirage", "format": "Format", "edition": "Édition", "exhibition": "Exposition",
         "unframed": "cm, hors cadre", "copies": "{n} exemplaires", "mounted": ", contrecollé sur aluminium",
-        "ask": "Se renseigner sur ce tirage", "all": "Toutes", "sheet": "Fiche de l’œuvre", "prev": "Photo précédente", "next": "Photo suivante",
+        "ask": "Se renseigner sur ce tirage", "all": "Toutes", "sheet": "Fiche de l’œuvre", "fullscreen": "Plein écran", "prev": "Photo précédente", "next": "Photo suivante",
         "work_desc": "{t}, {p}, {w}. Photographie d’Arnaud de Turckheim.",
         "expos_title": "Expositions", "solo": "Exposition personnelle", "curated": "Commissariat de",
         "by_artist": "Une exposition d’Arnaud de Turckheim",
@@ -89,7 +89,7 @@ T = {
         "photos_desc": "Photographs by Arnaud de Turckheim: Japan, United States, Germany, Morocco, Senegal, France.",
         "print": "Print", "format": "Size", "edition": "Edition", "exhibition": "Exhibition",
         "unframed": "cm, unframed", "copies": "Edition of {n}", "mounted": ", mounted on aluminium",
-        "ask": "Enquire about this print", "all": "All", "sheet": "About this work", "prev": "Previous photograph", "next": "Next photograph",
+        "ask": "Enquire about this print", "all": "All", "sheet": "About this work", "fullscreen": "Full screen", "prev": "Previous photograph", "next": "Next photograph",
         "work_desc": "{t}, {p}, {w}. Photograph by Arnaud de Turckheim.",
         "expos_title": "Exhibitions", "solo": "Solo exhibition", "curated": "Curated by",
         "by_artist": "An exhibition by Arnaud de Turckheim",
@@ -300,31 +300,29 @@ def home(L):
 # Chaque photo a une ancre (#slug) pour pouvoir partager un lien direct.
 
 def viewer(L, theme="paper", vid="v"):
+    """Visionneuse : chaque photo occupe toute la scène disponible, quel que soit son format.
+    Une seule barre en bas : compteur, légende, pellicule de miniatures, plein écran."""
     t, n = T[L], len(C.WORKS)
     slides, caps, thumbs = [], [], []
     for i, (title, place, country, when, fmt, ed) in enumerate(C.WORKS):
         s_ = slug(title)
-        w, h = (1466, 2200) if title in C.PORTRAIT_WORKS else (2200, 1466)
-        size = "big" if ed == 3 else "small"
-        slides.append(f'''<figure class="slide {size}" id="{vid}-{s_}" data-slug="{s_}">
-        <img data-src="/img/works/{s_}.jpg" data-srcset="/img/thumbs/{s_}.jpg 900w, /img/works/{s_}.jpg 2200w"
-             sizes="(min-width: 900px) 80vw, 100vw" width="{w}" height="{h}" alt="{esc(typo(title))}, {place}, {year(when)}"></figure>''')
-        caps.append(f'''<div class="vcap">
-        <span class="t"><em>{typo(title)}</em></span>
-        <span class="m">{place}, {country_l(country, L)}, {year(when)} · {fmt} cm</span>
-        <a class="more" href="{work_url(title, L)}">{t['sheet']} →</a></div>''')
+        w, h = (2133, 3200) if title in C.PORTRAIT_WORKS else (3200, 2133)
+        slides.append(f'''<figure class="slide" data-slug="{s_}" data-ratio="{w / h:.4f}">
+        <img data-src="/img/works/{s_}.jpg" data-srcset="/img/thumbs/{s_}.jpg 900w, /img/works/{s_}.jpg 2200w, /img/large/{s_}.jpg 3200w"
+             sizes="100vw" width="{w}" height="{h}" alt="{esc(typo(title))}, {place}, {year(when)}" draggable="false"></figure>''')
+        caps.append(f'''<p class="vcap"><span class="t"><em>{typo(title)}</em></span><span class="m">{place}, {country_l(country, L)}, {year(when)}</span><a class="more" href="{work_url(title, L)}">{t['sheet']}</a></p>''')
         thumbs.append(f'''<button class="th" aria-label="{esc(typo(title))}"><img src="/img/thumbs/{s_}.jpg" alt="" loading="lazy" decoding="async"></button>''')
     return f'''<div class="viewer {theme}" data-viewer tabindex="0" aria-roledescription="carrousel" aria-label="{t['photos_title']}">
   <div class="stage">
     {"".join(slides)}
-    <button class="nav prev" aria-label="{t['prev']}"></button><button class="nav next" aria-label="{t['next']}"></button>
+    <button class="nav prev" aria-label="{t['prev']}"><span>←</span></button><button class="nav next" aria-label="{t['next']}"><span>→</span></button>
   </div>
   <div class="vbar">
-    <span class="count"><b>01</b> / {n:02d}</span>
+    <span class="count"><b>01</b><i>/</i>{n:02d}</span>
     <div class="caps">{"".join(caps)}</div>
-    <span class="arrows"><button class="a-prev" aria-label="{t['prev']}">←</button><button class="a-next" aria-label="{t['next']}">→</button></span>
+    <div class="strip">{"".join(thumbs)}</div>
+    <button class="fs" aria-label="{t['fullscreen']}" title="{t['fullscreen']}"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 7V2h5M13 2h5v5M18 13v5h-5M7 18H2v-5"/></svg></button>
   </div>
-  <div class="strip">{"".join(thumbs)}</div>
 </div>'''
 
 
@@ -333,9 +331,8 @@ def photographies(L):
     body = f"""
 <h1 class="sr">{t['photos_title']}</h1>
 <section class="gallery">{viewer(L)}</section>
-<section class="gallery-note"><div class="wrap"><p>{t['photos_lead'].format(expo=expo_link(L))}</p></div></section>
 """
-    page(L, url("photos", L), alt_of("photos", L), t["photos_title"], body, active="photos", desc=t["photos_desc"])
+    page(L, url("photos", L), alt_of("photos", L), t["photos_title"], body, active="photos", cls="is-gallery", desc=t["photos_desc"])
 
 
 def work_pages(L):
