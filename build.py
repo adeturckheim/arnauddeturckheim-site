@@ -194,7 +194,7 @@ def page(L, path, alt, title, body, *, desc="", active="", cls="", og_image="hor
 <html lang="{L}">
 <head>
 <meta charset="utf-8">
-<script>if(location.protocol==="http:"&&/arnauddeturckheim\.com$/.test(location.hostname))location.replace("https://arnauddeturckheim.com"+location.pathname+location.search+location.hash)</script>
+<script>if(location.protocol==="http:"&&/arnauddeturckheim\\.com$/.test(location.hostname))location.replace("https://arnauddeturckheim.com"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(full)}</title>
 <meta name="description" content="{esc(desc)}">
