@@ -3,382 +3,79 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arnaud de Turckheim · Ce Qui Demeure</title>
-<meta name="description" content="Ce Qui Demeure, première exposition photographique d’Arnaud de Turckheim. Du 4 au 19 novembre 2026, 10 rue Lincoln, 75008 Paris. Commissariat de Pierre El Khoury.">
-<meta property="og:title" content="Ce Qui Demeure · Arnaud de Turckheim">
-<meta property="og:description" content="Première exposition photographique d’Arnaud de Turckheim. Du 4 au 19 novembre 2026, 10 rue Lincoln, 75008 Paris.">
-<meta property="og:image" content="https://arnauddeturckheim.com/img/works/hors-saison.jpg">
+<title>Arnaud de Turckheim · Photographe</title>
+<meta name="description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
+<link rel="canonical" href="https://arnauddeturckheim.com/">
+<meta property="og:title" content="Arnaud de Turckheim · Photographe">
+<meta property="og:description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
+<meta property="og:image" content="https://arnauddeturckheim.com/img/works/la-figure-de-l-absence.jpg">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316203a'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='16' fill='%23f1efe9' text-anchor='middle'%3EAT%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f1efe9">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
-<style>
-:root { --ink:#16203a; --soft:#5b6275; --rule:#cdc9bf; --paper:#f1efe9; --paper2:#e9e6de;
-        --serif:'EB Garamond', Georgia, serif; --display:'Cormorant Garamond', Georgia, serif; }
-* { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; scroll-padding-top:64px; }
-body { background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:18px; line-height:1.6;
-       -webkit-font-smoothing:antialiased; }
-a { color:inherit; }
-img { display:block; max-width:100%; height:auto; }
-.wrap { max-width:1180px; margin:0 auto; padding:0 24px; }
-
-header.top { position:sticky; top:0; z-index:10; background:rgba(241,239,233,.92); backdrop-filter:blur(8px);
-             border-bottom:.5px solid var(--rule); }
-header.top .wrap { display:flex; justify-content:space-between; align-items:center; height:56px; gap:16px; }
-.brand { font-family:var(--display); font-size:21px; font-weight:400; text-decoration:none; letter-spacing:.01em; white-space:nowrap; }
-nav { display:flex; gap:22px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
-nav a { text-decoration:none; color:var(--soft); }
-nav a:hover { color:var(--ink); }
-
-.hero { position:relative; }
-.hero img { width:100%; height:min(78vh, 66vw); object-fit:cover; object-position:50% 62%; }
-.band { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; padding:36px 0 56px;
-        border-bottom:.5px solid var(--rule); }
-h1, h2 { font-family:var(--display); font-weight:300; line-height:1.02; }
-h1 { font-size:clamp(44px, 7vw, 88px); }
-.sub { font-family:var(--display); font-style:italic; font-weight:300; font-size:clamp(19px, 2.2vw, 26px); margin-top:8px; }
-.band .right { text-align:right; font-size:19px; line-height:1.55; }
-.band .right .soft { color:var(--soft); font-size:16px; }
-
-section { padding:96px 0; }
-.label { font-size:12.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--soft); }
-h2 { font-size:clamp(36px, 4.6vw, 56px); margin:10px 0 36px; }
-
-.intro { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
-.intro .lead { font-family:var(--display); font-size:clamp(23px, 2.4vw, 30px); line-height:1.35; font-weight:300; }
-.facts { border-top:.5px solid var(--rule); }
-.facts div { display:flex; justify-content:space-between; gap:20px; padding:13px 0; border-bottom:.5px solid var(--rule); }
-.facts dt { color:var(--soft); }
-.facts dd { text-align:right; }
-
-.works { display:flex; flex-direction:column; gap:120px; padding-top:24px; }
-.work { display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:44px; align-items:end; }
-.work.port { grid-template-columns:minmax(0,1fr) 240px; }
-.work.port .frame { width:min(100%, 520px); justify-self:center; }
-.work:nth-child(even) { grid-template-columns:240px minmax(0,1fr); }
-.work:nth-child(even) .frame { order:2; }
-.frame { display:block; cursor:zoom-in; }
-.frame img { width:100%; box-shadow:0 6px 22px rgba(22,32,58,.16); }
-.work.port .frame img { width:auto; max-height:84vh; margin:0 auto; }
-figcaption { font-size:15.5px; line-height:1.5; color:var(--soft); }
-figcaption .n { display:block; font-size:12px; letter-spacing:.2em; margin-bottom:10px; }
-figcaption .t { font-style:italic; font-size:22px; line-height:1.2; color:var(--ink); margin-bottom:6px; }
-
-.essay { background:var(--paper2); }
-.essay .meta { color:var(--soft); padding-bottom:28px; border-bottom:.5px solid var(--rule); margin-bottom:40px; }
-.essay .body { columns:2; column-gap:56px; text-align:justify; hyphens:auto; font-size:17.5px; }
-.essay .body p { orphans:3; widows:3; }
-.essay .body p + p { margin-top:14px; }
-.essay sup { font-size:.62em; line-height:0; }
-.essay sup a { text-decoration:none; color:var(--soft); }
-.essay .sig { font-style:italic; text-align:right; margin-top:20px; }
-.notes { list-style:none; margin-top:48px; padding-top:20px; border-top:.5px solid var(--rule); font-size:14.5px;
-         color:var(--soft); columns:2; column-gap:56px; }
-.notes li { break-inside:avoid; margin-bottom:10px; }
-.notes a { text-decoration:none; color:var(--ink); }
-
-.bio { display:grid; grid-template-columns:340px 1fr; gap:72px; align-items:start; }
-.bio img { width:100%; aspect-ratio:3/4; object-fit:cover; border:.5px solid var(--rule); }
-.bio .name { margin-top:22px; letter-spacing:.18em; text-transform:uppercase; font-size:14px; }
-.bio .body { text-align:justify; hyphens:auto; }
-.bio .body p + p { margin-top:14px; }
-
-.contact { border-top:.5px solid var(--rule); }
-.contact .rows { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
-.contact .who { font-family:var(--display); font-size:30px; font-weight:300; }
-.contact .role { color:var(--soft); margin-bottom:8px; }
-.contact a.mail { font-size:19px; text-decoration-thickness:.5px; text-underline-offset:4px; }
-footer { padding:28px 0 40px; color:var(--soft); font-size:14px; border-top:.5px solid var(--rule); }
-footer .wrap { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
-
-.lightbox { position:fixed; inset:0; background:rgba(14,18,30,.94); display:none; align-items:center;
-            justify-content:center; z-index:50; cursor:zoom-out; padding:24px; }
-.lightbox.on { display:flex; }
-.lightbox img { max-width:100%; max-height:100%; object-fit:contain; }
-
-@media (max-width: 900px) {
-  body { font-size:17px; }
-  nav { display:none; }
-  .band { flex-direction:column; align-items:flex-start; padding:28px 0 40px; }
-  .band .right { text-align:left; }
-  section { padding:64px 0; }
-  .intro, .bio, .contact .rows { grid-template-columns:1fr; gap:36px; }
-  .bio img { max-width:320px; }
-  .works { gap:72px; }
-  .work, .work.port, .work:nth-child(even) { grid-template-columns:1fr; gap:16px; }
-  .work:nth-child(even) .frame { order:0; }
-  .essay .body, .notes { columns:1; }
-}
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="is-home">
 <header class="top"><div class="wrap">
-  <a class="brand" href="#">Arnaud de Turckheim</a>
-  <nav><a href="#exposition">Exposition</a><a href="#oeuvres">Œuvres</a><a href="#texte">Texte</a><a href="#bio">Bio</a><a href="#contact">Contact</a></nav>
+  <a class="brand" href="/">Arnaud de Turckheim</a>
+  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <nav><a href="/photographies/">Photographies</a><a href="/expositions/">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav>
 </div></header>
-
 <main>
-<div class="hero"><img src="img/works/hors-saison.jpg" width="2200" height="1466" alt="Hors saison, Los Angeles, février 2018" fetchpriority="high"></div>
-<div class="wrap"><div class="band">
-  <div><h1>Ce Qui Demeure</h1><p class="sub">Une exposition d’Arnaud de Turckheim</p></div>
-  <div class="right"><p>Du 4 au 19 novembre 2026</p><p>10 rue Lincoln, 75008 Paris</p><p class="soft">Commissariat de Pierre El Khoury</p></div>
-</div></div>
 
-<section id="exposition"><div class="wrap intro">
-  <div><p class="label">L’exposition</p><h2>Dix-huit tirages, une première</h2>
-    <p class="lead">Une décennie de photographie restée privée, montrée pour la première fois. Des images prises au Japon, en Californie, au Maroc, au Sénégal et en France, réunies autour d’une même question&nbsp;: qu’est-ce qui demeure lorsque tout continue de passer&nbsp;?</p></div>
-  <dl class="facts">
-    <div><dt>Dates</dt><dd>4 - 19 novembre 2026</dd></div>
-    <div><dt>Lieu</dt><dd>10 rue Lincoln, 75008 Paris</dd></div>
-    <div><dt>Commissariat</dt><dd>Pierre El Khoury</dd></div>
-    <div><dt>Œuvres</dt><dd>18 tirages pigmentaires</dd></div>
-    <div><dt>Papier</dt><dd>Hahnemühle Photo Rag Baryta</dd></div>
-    <div><dt>Formats</dt><dd>40 × 60 cm, éditions de 5<br>80 × 120 cm, éditions de 3</dd></div>
-  </dl>
+<section class="home-hero">
+  <div class="home-intro">
+    <p class="kicker">Photographie</p>
+    <h1>Arnaud<br>de Turckheim</h1>
+    <p class="lead">Des images trouvées plutôt que fabriquées : un geste, une lumière, une géométrie qui affleurent dans l’ordinaire.</p>
+    <p class="links"><a class="arrow" href="/photographies/">Voir les photographies</a></p>
+  </div>
+  <a class="home-baobab" href="/photographies/la-figure-de-l-absence/">
+    <img class="" src="/img/works/la-figure-de-l-absence.jpg" srcset="/img/thumbs/la-figure-de-l-absence.jpg 900w, /img/works/la-figure-de-l-absence.jpg 2200w" sizes="(min-width: 900px) 46vw, 100vw" width="1466" height="2200" fetchpriority="high" decoding="async" alt="La Figure de l’absence">
+    <span class="cap"><em>La Figure de l’absence</em>, Sine-Saloum, 2019</span>
+  </a>
+</section>
+
+<section class="home-expo"><div class="wrap">
+  <a class="expo-card" href="/expositions/ce-qui-demeure/">
+    <img class="" src="/img/works/hors-saison.jpg" srcset="/img/thumbs/hors-saison.jpg 900w, /img/works/hors-saison.jpg 2200w" sizes="(min-width: 900px) 64vw, 100vw" width="2200" height="1466" loading="lazy" decoding="async" alt="Hors saison">
+    <div class="expo-text">
+      <p class="kicker">Exposition · 2026</p>
+      <h2>Ce Qui Demeure</h2>
+      <p class="meta">4 - 19 novembre 2026<br>10 rue Lincoln, 75008 Paris</p>
+      <p>Première exposition personnelle d’Arnaud de Turckheim. Dix-huit photographies, une même question : qu’est-ce qui demeure lorsque tout continue de passer ?</p>
+      <span class="arrow">Découvrir l’exposition</span>
+    </div>
+  </a>
 </div></section>
 
-<section id="oeuvres"><div class="wrap">
-  <p class="label">Les œuvres</p><h2>Liste des œuvres</h2>
-  <div class="works">
-      <figure class="work land" id="les-porteurs-de-lumiere">
-        <a class="frame" href="img/works/les-porteurs-de-lumiere.jpg" data-full>
-          <img src="img/thumbs/les-porteurs-de-lumiere.jpg" srcset="img/thumbs/les-porteurs-de-lumiere.jpg 900w, img/works/les-porteurs-de-lumiere.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Les porteurs de lumière, Shimoda, juillet 2017">
-        </a>
-        <figcaption><span class="n">01</span><p class="t">Les porteurs de lumière</p>
-          <p>Shimoda, juillet 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta, contrecollé sur aluminium</p>
-          <p>80 × 120 cm, hors cadre · Édition de 3</p></figcaption>
-      </figure>
-      <figure class="work land" id="l-attente-de-l-eau">
-        <a class="frame" href="img/works/l-attente-de-l-eau.jpg" data-full>
-          <img src="img/thumbs/l-attente-de-l-eau.jpg" srcset="img/thumbs/l-attente-de-l-eau.jpg 900w, img/works/l-attente-de-l-eau.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="L’attente de l’eau, Ise, juillet 2017">
-        </a>
-        <figcaption><span class="n">02</span><p class="t">L’attente de l’eau</p>
-          <p>Ise, juillet 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="le-temoin">
-        <a class="frame" href="img/works/le-temoin.jpg" data-full>
-          <img src="img/thumbs/le-temoin.jpg" srcset="img/thumbs/le-temoin.jpg 900w, img/works/le-temoin.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Le Témoin, Berlin, octobre 2017">
-        </a>
-        <figcaption><span class="n">03</span><p class="t">Le Témoin</p>
-          <p>Berlin, octobre 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="l-apparition">
-        <a class="frame" href="img/works/l-apparition.jpg" data-full>
-          <img src="img/thumbs/l-apparition.jpg" srcset="img/thumbs/l-apparition.jpg 900w, img/works/l-apparition.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="L’apparition, Provence, janvier 2018">
-        </a>
-        <figcaption><span class="n">04</span><p class="t">L’apparition</p>
-          <p>Provence, janvier 2018</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="la-gardienne">
-        <a class="frame" href="img/works/la-gardienne.jpg" data-full>
-          <img src="img/thumbs/la-gardienne.jpg" srcset="img/thumbs/la-gardienne.jpg 900w, img/works/la-gardienne.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="La Gardienne, Paris, janvier 2018">
-        </a>
-        <figcaption><span class="n">05</span><p class="t">La Gardienne</p>
-          <p>Paris, janvier 2018</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta, contrecollé sur aluminium</p>
-          <p>80 × 120 cm, hors cadre · Édition de 3</p></figcaption>
-      </figure>
-      <figure class="work land" id="le-temps-suspendu">
-        <a class="frame" href="img/works/le-temps-suspendu.jpg" data-full>
-          <img src="img/thumbs/le-temps-suspendu.jpg" srcset="img/thumbs/le-temps-suspendu.jpg 900w, img/works/le-temps-suspendu.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Le temps suspendu, Iidabashi, juin 2017">
-        </a>
-        <figcaption><span class="n">06</span><p class="t">Le temps suspendu</p>
-          <p>Iidabashi, juin 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="l-ascension">
-        <a class="frame" href="img/works/l-ascension.jpg" data-full>
-          <img src="img/thumbs/l-ascension.jpg" srcset="img/thumbs/l-ascension.jpg 900w, img/works/l-ascension.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="L’ascension, Los Angeles, avril 2017">
-        </a>
-        <figcaption><span class="n">07</span><p class="t">L’ascension</p>
-          <p>Los Angeles, avril 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="la-charpente-du-monde">
-        <a class="frame" href="img/works/la-charpente-du-monde.jpg" data-full>
-          <img src="img/thumbs/la-charpente-du-monde.jpg" srcset="img/thumbs/la-charpente-du-monde.jpg 900w, img/works/la-charpente-du-monde.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="La charpente du monde, San Francisco, avril 2017">
-        </a>
-        <figcaption><span class="n">08</span><p class="t">La charpente du monde</p>
-          <p>San Francisco, avril 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="l-autre-cote">
-        <a class="frame" href="img/works/l-autre-cote.jpg" data-full>
-          <img src="img/thumbs/l-autre-cote.jpg" srcset="img/thumbs/l-autre-cote.jpg 900w, img/works/l-autre-cote.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="L’autre côté, Hakone, juillet 2017">
-        </a>
-        <figcaption><span class="n">09</span><p class="t">L’autre côté</p>
-          <p>Hakone, juillet 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="les-revenantes">
-        <a class="frame" href="img/works/les-revenantes.jpg" data-full>
-          <img src="img/thumbs/les-revenantes.jpg" srcset="img/thumbs/les-revenantes.jpg 900w, img/works/les-revenantes.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Les revenantes, Provence, décembre 2017">
-        </a>
-        <figcaption><span class="n">10</span><p class="t">Les revenantes</p>
-          <p>Provence, décembre 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="le-detour">
-        <a class="frame" href="img/works/le-detour.jpg" data-full>
-          <img src="img/thumbs/le-detour.jpg" srcset="img/thumbs/le-detour.jpg 900w, img/works/le-detour.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Le détour, Tokyo, mai 2017">
-        </a>
-        <figcaption><span class="n">11</span><p class="t">Le détour</p>
-          <p>Tokyo, mai 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta, contrecollé sur aluminium</p>
-          <p>80 × 120 cm, hors cadre · Édition de 3</p></figcaption>
-      </figure>
-      <figure class="work land" id="quietude">
-        <a class="frame" href="img/works/quietude.jpg" data-full>
-          <img src="img/thumbs/quietude.jpg" srcset="img/thumbs/quietude.jpg 900w, img/works/quietude.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Quiétude, Nakano, mai 2017">
-        </a>
-        <figcaption><span class="n">12</span><p class="t">Quiétude</p>
-          <p>Nakano, mai 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="la-traversee">
-        <a class="frame" href="img/works/la-traversee.jpg" data-full>
-          <img src="img/thumbs/la-traversee.jpg" srcset="img/thumbs/la-traversee.jpg 900w, img/works/la-traversee.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="La traversée, Tokyo, juillet 2017">
-        </a>
-        <figcaption><span class="n">13</span><p class="t">La traversée</p>
-          <p>Tokyo, juillet 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work land" id="habiter-l-absence">
-        <a class="frame" href="img/works/habiter-l-absence.jpg" data-full>
-          <img src="img/thumbs/habiter-l-absence.jpg" srcset="img/thumbs/habiter-l-absence.jpg 900w, img/works/habiter-l-absence.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Habiter l’absence, Marrakech, octobre 2017">
-        </a>
-        <figcaption><span class="n">14</span><p class="t">Habiter l’absence</p>
-          <p>Marrakech, octobre 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work port" id="le-songe-eveille">
-        <a class="frame" href="img/works/le-songe-eveille.jpg" data-full>
-          <img src="img/thumbs/le-songe-eveille.jpg" srcset="img/thumbs/le-songe-eveille.jpg 900w, img/works/le-songe-eveille.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="1466" height="2200" loading="lazy"
-               alt="Le songe éveillé, Shimoda, juillet 2017">
-        </a>
-        <figcaption><span class="n">15</span><p class="t">Le songe éveillé</p>
-          <p>Shimoda, juillet 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>60 × 40 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
-      <figure class="work port" id="l-attente">
-        <a class="frame" href="img/works/l-attente.jpg" data-full>
-          <img src="img/thumbs/l-attente.jpg" srcset="img/thumbs/l-attente.jpg 900w, img/works/l-attente.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="1466" height="2200" loading="lazy"
-               alt="L’attente, Hakone, juillet 2017">
-        </a>
-        <figcaption><span class="n">16</span><p class="t">L’attente</p>
-          <p>Hakone, juillet 2017</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta, contrecollé sur aluminium</p>
-          <p>120 × 80 cm, hors cadre · Édition de 3</p></figcaption>
-      </figure>
-      <figure class="work port" id="la-figure-de-l-absence">
-        <a class="frame" href="img/works/la-figure-de-l-absence.jpg" data-full>
-          <img src="img/thumbs/la-figure-de-l-absence.jpg" srcset="img/thumbs/la-figure-de-l-absence.jpg 900w, img/works/la-figure-de-l-absence.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="1466" height="2200" loading="lazy"
-               alt="La Figure de l’absence, Sine-Saloum, mai 2019">
-        </a>
-        <figcaption><span class="n">17</span><p class="t">La Figure de l’absence</p>
-          <p>Sine-Saloum, mai 2019</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta, contrecollé sur aluminium</p>
-          <p>120 × 80 cm, hors cadre · Édition de 3</p></figcaption>
-      </figure>
-      <figure class="work land" id="hors-saison">
-        <a class="frame" href="img/works/hors-saison.jpg" data-full>
-          <img src="img/thumbs/hors-saison.jpg" srcset="img/thumbs/hors-saison.jpg 900w, img/works/hors-saison.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="2200" height="1466" loading="lazy"
-               alt="Hors saison, Los Angeles, février 2018">
-        </a>
-        <figcaption><span class="n">18</span><p class="t">Hors saison</p>
-          <p>Los Angeles, février 2018</p>
-          <p>Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta</p>
-          <p>40 × 60 cm, hors cadre · Édition de 5</p></figcaption>
-      </figure>
+<section class="home-statement"><div class="wrap narrow">
+  <blockquote>Être là, regarder, attendre - puis laisser le réel continuer sans soi.</blockquote>
+  <p class="attr">Pierre El Khoury, <em>Ce Qui Demeure</em></p>
+</div></section>
+
+<section class="home-last"><div class="wrap">
+  <a class="wide" href="/photographies/les-porteurs-de-lumiere/">
+    <img class="" src="/img/works/les-porteurs-de-lumiere.jpg" srcset="/img/thumbs/les-porteurs-de-lumiere.jpg 900w, /img/works/les-porteurs-de-lumiere.jpg 2200w" sizes="100vw" width="2200" height="1466" loading="lazy" decoding="async" alt="Les porteurs de lumière">
+    <span class="cap"><em>Les porteurs de lumière</em>, Shimoda, 2017</span>
+  </a>
+  <div class="home-links">
+    <a href="/photographies/"><span class="kicker">Photographies</span><span class="big">Dix-huit images, 2017 - 2019</span></a>
+    <a href="/a-propos/"><span class="kicker">À propos</span><span class="big">Ingénieur, photographe, geek cowboy</span></a>
+    <a href="/contact/"><span class="kicker">Contact</span><span class="big">Écrire à l’artiste</span></a>
   </div>
 </div></section>
 
-<section id="texte" class="essay"><div class="wrap">
-  <p class="label">Texte d’exposition</p><h2>Ce Qui Demeure</h2>
-  <p class="meta">Par Pierre El Khoury, commissaire de l’exposition</p>
-  <div class="body"><p>Cette toute première exposition photographique d’Arnaud de Turckheim (né à Paris en 1990) nous accueille par un arbre majestueux, <em>La Figure de l’absence</em>, un baobab centenaire qui se dresse, seul, face à la lumière. Avant même que le visiteur ne découvre les scènes du quotidien, cette silhouette impose une présence silencieuse. Elle constitue un seuil, une première image qui donne le ton, le leitmotiv qui est au cœur de l’exposition : être là sans s’imposer, occuper l’espace tout en laissant place au regard.</p><p>Cet arbre entre en résonance avec la stature du photographe, dont la grande taille constitue un trait physique singulier. Il serait hasardeux d’en déduire directement une manière de photographier ; pourtant, cette proximité ouvre une lecture possible. À une présence physique imposante peut répondre une posture photographique faite de discrétion, de retrait et d’observation. Le photographe est là, attentif et réceptif aux manifestations de la vie, mais ne cherche pas nécessairement à occuper le premier plan. Son existence se manifeste moins par l’affirmation de soi que par la qualité de sa perception, par sa façon de se tenir au plus près du réel tout en lui laissant son autonomie.</p><p>L’ensemble des œuvres réunies dans <em>Ce Qui Demeure</em> a été réalisé dans différents environnements, au fil des rencontres et des situations qui ont captivé Arnaud de Turckheim. Pourtant, l’exposition ne cherche pas à restituer ces lieux de vie selon une géographie ou une chronologie. Leur ancrage compte, mais il ne constitue pas le sujet principal. Il ne s’agit ni d’un inventaire ni d’une succession de décors : les photographies se détachent de leur contexte initial pour entrer en symbiose les unes avec les autres. D’un pays à l’autre, d’une scène quotidienne à une ombre, se dessine une même manière d’être au monde et de regarder ce qui l’entoure.</p><p>La série se construit autour de la notion d’intervalle : un espace de transition entre deux états, entre apparition et disparition, mouvement et immobilité, proximité et distance. Cette dernière saisit des moments où quelque chose semble suspendu, à la frontière entre ce qui se déroule et ce qui vient de s’achever. Le réel continue, mais l’image en retient une empreinte.</p><p>Le titre de l’exposition, <em>Ce Qui Demeure</em>, naît de cette tension entre ce qui passe et ce qui persiste. Pourtant, quelque chose subsiste de ces instants : une forme, une relation entre un corps et son environnement, parfois simplement la sensation d’un moment vécu.</p><p>Sans en établir une filiation directe, le travail d’Arnaud de Turckheim pourrait s’inscrire dans l’histoire de la photographie contemporaine et plus précisément la photographie documentaire, qui à partir des années 1950 déplace progressivement l’attention de l’évènement vers l’expérience du quotidien.</p><p>Chez Harry Callahan<sup><a href="#note-1" id="ref-1">1</a></sup>, la lumière et les ombres deviennent des éléments essentiels de la composition. Son intérêt pour les formes simples et les contrastes trouve un reflet particulier dans <em>Les Revenantes</em>, où l’ombre semble conserver la mémoire d’un corps, et dans <em>Les Porteurs de lumière</em>, où les figures des travailleurs et leurs ombres se répondent, ouvrant un espace entre le vivant et sa trace.</p><p>Chez Robert Frank<sup><a href="#note-2" id="ref-2">2</a></sup>, le quotidien se donne à voir par fragments, sans que les images ne composent obligatoirement un récit complet. Les scènes de rue et les figures croisées conservent une part d’incertitude. C’est ce qu’envisagent <em>La Traversée</em> et <em>Le Détour</em>, où le déplacement ne devient pas le prétexte à raconter une histoire de voyage, mais l’occasion de saisir un instant dont le sens reste ouvert.</p><p>Chez Stephen Shore<sup><a href="#note-3" id="ref-3">3</a></sup>, c’est le regard porté sur les lieux ordinaires et les détails du monde contemporain qui entre en lien avec l’exposition. Cette approche trouve un écho dans <em>Hors saison</em>, où la piscine vide semble privée de sa fonction habituelle. Il n’y a aucune volonté de chercher l’évènement spectaculaire : il accorde au lieu, à sa lumière et à son organisation une importance qui transforme notre perception du banal.</p><p>Quant aux portraits, ils élargissent le propos. Ces derniers initient entre autres un dialogue avec Nan Goldin<sup><a href="#note-4" id="ref-4">4</a></sup>, photographe américaine mondialement reconnue, dont le travail explore l’intimité, la proximité avec les personnes photographiées et la capacité de l’image à conserver la trace d’une expérience vécue. Son esthétique, parfois marquée par le grain, le flou ou la lumière directe, confère aux images une immédiateté sensible, comme si l’image portait en elle les conditions mêmes de son existence. Cette singularité est particulièrement perceptible dans <em>L’Apparition</em>, où le grain et la texture photographique participent à la présence du sujet. On retrouve ici cette qualité sensible de la photographie, sa capacité à abriter une forme de fragilité et d’imperfection, plutôt qu’une similitude de sujet ou de démarche autobiographique. Dans <em>La Gardienne</em> ou <em>Le Songe éveillé</em>, les portraits ne cherchent pas à tout révéler : ils préservent une part de retrait, une zone d’opacité qui laisse au visage sa liberté et son mystère.</p><p>Au-delà de ces rapprochements, on perçoit bien ici les diverses prouesses techniques propres à ce médium. Arnaud de Turckheim en saisit toutes les subtilités, que cela résulte de l’accidentel ou du volontaire. L’ensemble photographique garde son autonomie et sa part d’indétermination.</p><p>Une question traverse toute la série : Qu’est-ce qui demeure lorsque tout continue de passer ? Est-ce le corps, le lieu, la lumière, la mémoire de ce qui a été vu ? Ou bien est-ce une attention portée au monde, grâce à laquelle un instant ordinaire acquiert une existence nouvelle ?</p><p>Le photographe se tient à cette frontière. Il est indispensable à l’image, mais il n’a pas besoin de s’y manifester. Être là, regarder, attendre - puis laisser le réel continuer sans soi.</p><p>Ce qui demeure n’est donc pas forcément ce qui dure le plus longtemps. C’est ce qui survit au passage sans se confondre avec l’immobilité, ce que l’image préserve sans prétendre le retenir tout entier. Entre le monde qui continue et la photographie qui en garde la trace, quelque chose reste - fragile, incertain mais désormais visible pour tous.</p><p class="sig">Pierre El Khoury</p></div>
-  <ol class="notes"><li id="note-1"><a href="#ref-1">1</a> Harry Callahan (1912-1999), photographe américain majeur dont l’œuvre intime et expérimentale s’articule autour de trois grands sujets, sa femme (Eleanor), la ville et la nature.</li><li id="note-2"><a href="#ref-2">2</a> Robert Frank (1924-2019), photographe et réalisateur américano-suisse, célèbre pour son livre iconique <em>The Americans</em> (1958), qui a révolutionné la photographie documentaire par son regard subjectif et sans compromis sur la société américaine.</li><li id="note-3"><a href="#ref-3">3</a> Stephen Shore (né en 1947), photographe pionnier américain qui a révolutionné l’histoire de l’art des années 1970 en imposant la photographie couleur et la beauté brute du quotidien ordinaire - stations-service, repas, motels - comme des sujets artistiques majeurs.</li><li id="note-4"><a href="#ref-4">4</a> Nan Goldin (née en 1953), photographe américaine et figure majeure de la photographie contemporaine, qui transforme son journal intime - fait d’amour, de marginalité, de violence - en une œuvre politique et universelle.</li></ol>
-</div></section>
-
-<section id="bio"><div class="wrap bio">
-  <div><img src="img/portrait.jpg" width="900" height="900" alt="Portrait d’Arnaud de Turckheim" loading="lazy">
-    <p class="name">Arnaud de Turckheim</p></div>
-  <div><p class="label">L’artiste</p><h2>Bio</h2><div class="body"><p>Ingénieur de formation, Arnaud de Turckheim photographie depuis les années 2000. Une pratique d’abord privée, tenue en retrait pendant près de vingt ans, qu’il choisit aujourd’hui de rendre publique pour la première fois.</p><p>Élevé entre Paris et la Provence, dans une famille où l’image est une langue familière - sa mère est photographe -, il vit en Chine, en Angleterre puis au Japon, avant de rentrer en France en 2017. De ces années nomades, il garde un goût pour l’observation discrète : il ne cherche pas l’événement, mais ce qui affleure dans l’ordinaire - un geste, une lumière, une géométrie. Ses proches le décrivent volontiers comme un « geek cowboy », partagé entre la logique de l’ingénieur et l’attrait des grands espaces.</p><p>Son écriture photographique est reconnaissable : contre-jours tenus, lumières rasantes, contrastes francs, nuances de gris et de vert. Le portrait rapproché y croise l’abstraction urbaine, l’ethnographie discrète y répond à une forme de méditation formelle. Les images sont numériques, honnêtes : il revendique une photographie cadrée par l’œil, sans artifice.</p><p><em>Ce Qui Demeure</em> réunit dix-huit tirages pris au Japon, en Californie, au Maroc, au Sénégal et en France. L’exposition est assumée comme <strong>pré-IA</strong> : l’image telle qu’elle se faisait avant la bascule générative, cadrée par un regard et non par un modèle. Une première monstration, et l’ouverture d’une conversation que l’auteur entend prolonger.</p></div></div>
-</div></section>
-
-<section id="contact" class="contact"><div class="wrap">
-  <p class="label">Contact</p><h2>Écrire</h2>
-  <div class="rows">
-    <div><p class="who">Arnaud de Turckheim</p><p class="role">Artiste</p>
-      <a class="mail" href="mailto:adeturckheim@gmail.com">adeturckheim@gmail.com</a></div>
-    <div><p class="who">Pierre El Khoury</p><p class="role">Commissaire de l’exposition</p>
-      <a class="mail" href="mailto:pek.elkhoury@gmail.com">pek.elkhoury@gmail.com</a></div>
-  </div>
-</div></section>
 </main>
-
-<footer><div class="wrap">
-  <span>© 2026 Arnaud de Turckheim. Toutes les images sont protégées.</span>
-  <span>Commissariat de Pierre El Khoury · Lieu prêté par Roka</span>
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="/">Arnaud de Turckheim</a>
+  <span><a href="mailto:adeturckheim@gmail.com">adeturckheim@gmail.com</a></span>
+  <span>© 2026 · Toutes les images sont protégées</span>
 </div></footer>
-
-<div class="lightbox" role="dialog" aria-label="Image en grand"><img alt=""></div>
 <script>
-const lb = document.querySelector('.lightbox'), lbi = lb.querySelector('img');
-document.querySelectorAll('[data-full]').forEach(a => a.addEventListener('click', e => {
-  e.preventDefault(); lbi.src = a.href; lbi.alt = a.querySelector('img').alt; lb.classList.add('on');
-}));
-lb.addEventListener('click', () => { lb.classList.remove('on'); lbi.removeAttribute('src'); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.click(); });
+const b=document.querySelector('.burger');b.addEventListener('click',()=>{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)});
+document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href});
 </script>
 </body>
 </html>

@@ -1,70 +1,20 @@
-"""Site arnauddeturckheim.com : page unique autour de l'exposition « Ce Qui Demeure ».
+"""Génère le site statique arnauddeturckheim.com (pages en dossiers, URLs propres).
 
-Contenu repris du preview (Drive : Expo/9 - Preview/build.py), sans les prix.
-Le texte de Pierre El Khoury vient de content/texte.txt (copie de Expo/8 - Texte exposition/texte.txt).
-Usage : python3 build.py  -> écrit index.html
+Contenus : content.py et content/texte.txt (texte de Pierre El Khoury).
+Images : img/works (2200 px) et img/thumbs (900 px), exportées depuis Expo/1 - Photos/3 - JPEG.
+Usage : python3 build.py
 """
 import html
 import re
+import shutil
 import unicodedata
 from pathlib import Path
 
+from content import (BIO, EXCERPTS, EXPO, HOME_LEAD, MILESTONES, NB, PAPER, PORTRAIT_WORKS, SITE,
+                     STATEMENT, WORKS)
+
 HERE = Path(__file__).parent
-DATES = "Du 4 au 19 novembre 2026"
-ADDRESS = "10 rue Lincoln, 75008 Paris"
-PAPER = "Tirage pigmentaire sur papier Hahnemühle Photo Rag Baryta"
-EMAIL_ARNAUD = "adeturckheim@gmail.com"
-EMAIL_PIERRE = "pek.elkhoury@gmail.com"
-
-# (titre, lieu, date de prise de vue, format H x L, édition) - ordre de la feuille de salle
-WORKS = [
-    ("Les porteurs de lumière", "Shimoda", "juillet 2017", "80 × 120", 3),
-    ("L'attente de l'eau", "Ise", "juillet 2017", "40 × 60", 5),
-    ("Le Témoin", "Berlin", "octobre 2017", "40 × 60", 5),
-    ("L'apparition", "Provence", "janvier 2018", "40 × 60", 5),
-    ("La Gardienne", "Paris", "janvier 2018", "80 × 120", 3),
-    ("Le temps suspendu", "Iidabashi", "juin 2017", "40 × 60", 5),
-    ("L'ascension", "Los Angeles", "avril 2017", "40 × 60", 5),
-    ("La charpente du monde", "San Francisco", "avril 2017", "40 × 60", 5),
-    ("L'autre côté", "Hakone", "juillet 2017", "40 × 60", 5),
-    ("Les revenantes", "Provence", "décembre 2017", "40 × 60", 5),
-    ("Le détour", "Tokyo", "mai 2017", "80 × 120", 3),
-    ("Quiétude", "Nakano", "mai 2017", "40 × 60", 5),
-    ("La traversée", "Tokyo", "juillet 2017", "40 × 60", 5),
-    ("Habiter l'absence", "Marrakech", "octobre 2017", "40 × 60", 5),
-    ("Le songe éveillé", "Shimoda", "juillet 2017", "60 × 40", 5),
-    ("L'attente", "Hakone", "juillet 2017", "120 × 80", 3),
-    ("La Figure de l'absence", "Sine-Saloum", "mai 2019", "120 × 80", 3),
-    ("Hors saison", "Los Angeles", "février 2018", "40 × 60", 5),
-]
-PORTRAIT_WORKS = {"L'attente", "La Figure de l'absence", "Le songe éveillé"}
-COVER = "Hors saison"
-
-# Bio du preview ; Arnaud veut le trait d'union, jamais de tiret long
-BIO = [
-    "Ingénieur de formation, Arnaud de Turckheim photographie depuis les années 2000. Une pratique "
-    "d’abord privée, tenue en retrait pendant près de vingt ans, qu’il choisit aujourd’hui de rendre "
-    "publique pour la première fois.",
-    "Élevé entre Paris et la Provence, dans une famille où l’image est une langue familière - sa mère "
-    "est photographe -, il vit en Chine, en Angleterre puis au Japon, avant de rentrer en France en 2017. "
-    "De ces années nomades, il garde un goût pour l’observation discrète : il ne cherche pas "
-    "l’événement, mais ce qui affleure dans l’ordinaire - un geste, une lumière, une géométrie. "
-    "Ses proches le décrivent volontiers comme un « geek cowboy », partagé entre la logique de "
-    "l’ingénieur et l’attrait des grands espaces.",
-    "Son écriture photographique est reconnaissable : contre-jours tenus, lumières rasantes, contrastes "
-    "francs, nuances de gris et de vert. Le portrait rapproché y croise l’abstraction urbaine, "
-    "l’ethnographie discrète y répond à une forme de méditation formelle. Les images sont numériques, "
-    "honnêtes : il revendique une photographie cadrée par l’œil, sans artifice.",
-    "<em>Ce Qui Demeure</em> réunit dix-huit tirages pris au Japon, en Californie, au Maroc, au Sénégal "
-    "et en France. L’exposition est assumée comme <strong>pré-IA</strong> : l’image telle "
-    "qu’elle se faisait avant la bascule générative, cadrée par un regard et non par un modèle. Une première "
-    "monstration, et l’ouverture d’une conversation que l’auteur entend prolonger.",
-]
-
-TEXT_TITLES = ["La Figure de l’absence", "Ce Qui Demeure", "Les Revenantes", "Les Porteurs de lumière",
-               "La Traversée", "Le Détour", "Hors saison", "L’Apparition", "La Gardienne",
-               "Le Songe éveillé", "The Americans"]
-SUPERSCRIPTS = {"¹": "1", "²": "2", "³": "3", "⁴": "4"}
+OUT_DIRS = ["photographies", "expositions", "a-propos", "contact"]
 
 
 def slug(title):
@@ -76,255 +26,370 @@ def typo(s):
     return s.replace("'", "’")
 
 
-def rich(t):
-    t = html.escape(t, quote=False)
-    for title in TEXT_TITLES:
-        t = t.replace(title, f"<em>{title}</em>")
-    for k, v in SUPERSCRIPTS.items():
-        t = t.replace(k, f'<sup><a href="#note-{v}" id="ref-{v}">{v}</a></sup>', 1)
-    return t
+def esc(s):
+    return html.escape(s, quote=True)
 
 
-def essay():
-    body, notes = (HERE / "content" / "texte.txt").read_text().split("---NOTES---")
-    paras = "".join(f"<p>{rich(' '.join(b.split()))}</p>" for b in body.strip().split("\n\n") if b.strip())
-    items = []
-    for n in notes.strip().split("\n\n"):
-        n = n.strip()
-        if not n:
-            continue
-        num = SUPERSCRIPTS.get(n[0], "")
-        text = html.escape(n[1:].strip(), quote=False)
-        for title in TEXT_TITLES:
-            text = text.replace(title, f"<em>{title}</em>")
-        items.append(f'<li id="note-{num}"><a href="#ref-{num}">{num}</a> {text}</li>')
-    return paras, "".join(items)
+def dims(title):
+    return (1466, 2200) if title in PORTRAIT_WORKS else (2200, 1466)
 
 
-def caption(title, place, when, fmt, ed):
-    support = PAPER + (", contrecollé sur aluminium" if ed == 3 else "")
-    return f"""<p class="t">{typo(title)}</p>
-          <p>{place}, {when}</p>
-          <p>{support}</p>
-          <p>{fmt} cm, hors cadre · Édition de {ed}</p>"""
+def year(when):
+    return when.split()[-1]
 
 
-def works():
-    out = []
-    for i, w in enumerate(WORKS, 1):
-        s = slug(w[0])
-        kind = "port" if w[0] in PORTRAIT_WORKS else "land"
-        w_, h_ = (1466, 2200) if kind == "port" else (2200, 1466)
-        out.append(f"""
-      <figure class="work {kind}" id="{s}">
-        <a class="frame" href="img/works/{s}.jpg" data-full>
-          <img src="img/thumbs/{s}.jpg" srcset="img/thumbs/{s}.jpg 900w, img/works/{s}.jpg 2200w"
-               sizes="(min-width: 900px) 62vw, 100vw" width="{w_}" height="{h_}" loading="lazy"
-               alt="{html.escape(typo(w[0]))}, {w[1]}, {w[2]}">
-        </a>
-        <figcaption><span class="n">{i:02d}</span>{caption(*w)}</figcaption>
-      </figure>""")
-    return "".join(out)
+def img(title, size="thumbs", sizes="100vw", cls="", eager=False):
+    s = slug(title)
+    w, h = dims(title)
+    load = 'fetchpriority="high"' if eager else 'loading="lazy"'
+    return (f'<img class="{cls}" src="/img/{size}/{s}.jpg" '
+            f'srcset="/img/thumbs/{s}.jpg 900w, /img/works/{s}.jpg 2200w" sizes="{sizes}" '
+            f'width="{w}" height="{h}" {load} decoding="async" alt="{esc(typo(title))}">')
 
 
-CSS = """
-:root { --ink:#16203a; --soft:#5b6275; --rule:#cdc9bf; --paper:#f1efe9; --paper2:#e9e6de;
-        --serif:'EB Garamond', Georgia, serif; --display:'Cormorant Garamond', Georgia, serif; }
-* { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; scroll-padding-top:64px; }
-body { background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:18px; line-height:1.6;
-       -webkit-font-smoothing:antialiased; }
-a { color:inherit; }
-img { display:block; max-width:100%; height:auto; }
-.wrap { max-width:1180px; margin:0 auto; padding:0 24px; }
+# ---------------------------------------------------------------- gabarit
 
-header.top { position:sticky; top:0; z-index:10; background:rgba(241,239,233,.92); backdrop-filter:blur(8px);
-             border-bottom:.5px solid var(--rule); }
-header.top .wrap { display:flex; justify-content:space-between; align-items:center; height:56px; gap:16px; }
-.brand { font-family:var(--display); font-size:21px; font-weight:400; text-decoration:none; letter-spacing:.01em; white-space:nowrap; }
-nav { display:flex; gap:22px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
-nav a { text-decoration:none; color:var(--soft); }
-nav a:hover { color:var(--ink); }
-
-.hero { position:relative; }
-.hero img { width:100%; height:min(78vh, 66vw); object-fit:cover; object-position:50% 62%; }
-.band { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; padding:36px 0 56px;
-        border-bottom:.5px solid var(--rule); }
-h1, h2 { font-family:var(--display); font-weight:300; line-height:1.02; }
-h1 { font-size:clamp(44px, 7vw, 88px); }
-.sub { font-family:var(--display); font-style:italic; font-weight:300; font-size:clamp(19px, 2.2vw, 26px); margin-top:8px; }
-.band .right { text-align:right; font-size:19px; line-height:1.55; }
-.band .right .soft { color:var(--soft); font-size:16px; }
-
-section { padding:96px 0; }
-.label { font-size:12.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--soft); }
-h2 { font-size:clamp(36px, 4.6vw, 56px); margin:10px 0 36px; }
-
-.intro { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
-.intro .lead { font-family:var(--display); font-size:clamp(23px, 2.4vw, 30px); line-height:1.35; font-weight:300; }
-.facts { border-top:.5px solid var(--rule); }
-.facts div { display:flex; justify-content:space-between; gap:20px; padding:13px 0; border-bottom:.5px solid var(--rule); }
-.facts dt { color:var(--soft); }
-.facts dd { text-align:right; }
-
-.works { display:flex; flex-direction:column; gap:120px; padding-top:24px; }
-.work { display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:44px; align-items:end; }
-.work.port { grid-template-columns:minmax(0,1fr) 240px; }
-.work.port .frame { width:min(100%, 520px); justify-self:center; }
-.work:nth-child(even) { grid-template-columns:240px minmax(0,1fr); }
-.work:nth-child(even) .frame { order:2; }
-.frame { display:block; cursor:zoom-in; }
-.frame img { width:100%; box-shadow:0 6px 22px rgba(22,32,58,.16); }
-.work.port .frame img { width:auto; max-height:84vh; margin:0 auto; }
-figcaption { font-size:15.5px; line-height:1.5; color:var(--soft); }
-figcaption .n { display:block; font-size:12px; letter-spacing:.2em; margin-bottom:10px; }
-figcaption .t { font-style:italic; font-size:22px; line-height:1.2; color:var(--ink); margin-bottom:6px; }
-
-.essay { background:var(--paper2); }
-.essay .meta { color:var(--soft); padding-bottom:28px; border-bottom:.5px solid var(--rule); margin-bottom:40px; }
-.essay .body { columns:2; column-gap:56px; text-align:justify; hyphens:auto; font-size:17.5px; }
-.essay .body p { orphans:3; widows:3; }
-.essay .body p + p { margin-top:14px; }
-.essay sup { font-size:.62em; line-height:0; }
-.essay sup a { text-decoration:none; color:var(--soft); }
-.essay .sig { font-style:italic; text-align:right; margin-top:20px; }
-.notes { list-style:none; margin-top:48px; padding-top:20px; border-top:.5px solid var(--rule); font-size:14.5px;
-         color:var(--soft); columns:2; column-gap:56px; }
-.notes li { break-inside:avoid; margin-bottom:10px; }
-.notes a { text-decoration:none; color:var(--ink); }
-
-.bio { display:grid; grid-template-columns:340px 1fr; gap:72px; align-items:start; }
-.bio img { width:100%; aspect-ratio:3/4; object-fit:cover; border:.5px solid var(--rule); }
-.bio .name { margin-top:22px; letter-spacing:.18em; text-transform:uppercase; font-size:14px; }
-.bio .body { text-align:justify; hyphens:auto; }
-.bio .body p + p { margin-top:14px; }
-
-.contact { border-top:.5px solid var(--rule); }
-.contact .rows { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
-.contact .who { font-family:var(--display); font-size:30px; font-weight:300; }
-.contact .role { color:var(--soft); margin-bottom:8px; }
-.contact a.mail { font-size:19px; text-decoration-thickness:.5px; text-underline-offset:4px; }
-footer { padding:28px 0 40px; color:var(--soft); font-size:14px; border-top:.5px solid var(--rule); }
-footer .wrap { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
-
-.lightbox { position:fixed; inset:0; background:rgba(14,18,30,.94); display:none; align-items:center;
-            justify-content:center; z-index:50; cursor:zoom-out; padding:24px; }
-.lightbox.on { display:flex; }
-.lightbox img { max-width:100%; max-height:100%; object-fit:contain; }
-
-@media (max-width: 900px) {
-  body { font-size:17px; }
-  nav { display:none; }
-  .band { flex-direction:column; align-items:flex-start; padding:28px 0 40px; }
-  .band .right { text-align:left; }
-  section { padding:64px 0; }
-  .intro, .bio, .contact .rows { grid-template-columns:1fr; gap:36px; }
-  .bio img { max-width:320px; }
-  .works { gap:72px; }
-  .work, .work.port, .work:nth-child(even) { grid-template-columns:1fr; gap:16px; }
-  .work:nth-child(even) .frame { order:0; }
-  .essay .body, .notes { columns:1; }
-}
-"""
-
-JS = """
-const lb = document.querySelector('.lightbox'), lbi = lb.querySelector('img');
-document.querySelectorAll('[data-full]').forEach(a => a.addEventListener('click', e => {
-  e.preventDefault(); lbi.src = a.href; lbi.alt = a.querySelector('img').alt; lb.classList.add('on');
-}));
-lb.addEventListener('click', () => { lb.classList.remove('on'); lbi.removeAttribute('src'); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.click(); });
-"""
+CUR = ' aria-current="page"'
 
 
-def main():
-    paras, notes = essay()
-    bio = "".join(f"<p>{p}</p>" for p in BIO)
-    cover = slug(COVER)
-    page = f"""<!doctype html>
+
+def page(path, title, body, *, desc="", active="", cls="", og_image="hors-saison"):
+    full = f"{title} · {SITE['name']}" if title else f"{SITE['name']} · Photographe"
+    desc = desc or "Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026."
+    nav = "".join(
+        f'<a href="/{p}/"{CUR if active == p else ""}>{label}</a>'
+        for p, label in [("photographies", "Photographies"), ("expositions", "Expositions"),
+                         ("a-propos", "À propos"), ("contact", "Contact")])
+    doc = f"""<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arnaud de Turckheim · Ce Qui Demeure</title>
-<meta name="description" content="Ce Qui Demeure, première exposition photographique d’Arnaud de Turckheim. {DATES}, {ADDRESS}. Commissariat de Pierre El Khoury.">
-<meta property="og:title" content="Ce Qui Demeure · Arnaud de Turckheim">
-<meta property="og:description" content="Première exposition photographique d’Arnaud de Turckheim. {DATES}, {ADDRESS}.">
-<meta property="og:image" content="https://arnauddeturckheim.com/img/works/{cover}.jpg">
+<title>{esc(full)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="canonical" href="{SITE['url']}{path}">
+<meta property="og:title" content="{esc(full)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:image" content="{SITE['url']}/img/works/{og_image}.jpg">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316203a'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='16' fill='%23f1efe9' text-anchor='middle'%3EAT%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f1efe9">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
-<style>{CSS}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="{cls}">
 <header class="top"><div class="wrap">
-  <a class="brand" href="#">Arnaud de Turckheim</a>
-  <nav><a href="#exposition">Exposition</a><a href="#oeuvres">Œuvres</a><a href="#texte">Texte</a><a href="#bio">Bio</a><a href="#contact">Contact</a></nav>
+  <a class="brand" href="/">Arnaud de Turckheim</a>
+  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <nav>{nav}</nav>
 </div></header>
-
 <main>
-<div class="hero"><img src="img/works/{cover}.jpg" width="2200" height="1466" alt="Hors saison, Los Angeles, février 2018" fetchpriority="high"></div>
-<div class="wrap"><div class="band">
-  <div><h1>Ce Qui Demeure</h1><p class="sub">Une exposition d’Arnaud de Turckheim</p></div>
-  <div class="right"><p>{DATES}</p><p>{ADDRESS}</p><p class="soft">Commissariat de Pierre El Khoury</p></div>
-</div></div>
-
-<section id="exposition"><div class="wrap intro">
-  <div><p class="label">L’exposition</p><h2>Dix-huit tirages, une première</h2>
-    <p class="lead">Une décennie de photographie restée privée, montrée pour la première fois. Des images prises au Japon, en Californie, au Maroc, au Sénégal et en France, réunies autour d’une même question&nbsp;: qu’est-ce qui demeure lorsque tout continue de passer&nbsp;?</p></div>
-  <dl class="facts">
-    <div><dt>Dates</dt><dd>4 - 19 novembre 2026</dd></div>
-    <div><dt>Lieu</dt><dd>{ADDRESS}</dd></div>
-    <div><dt>Commissariat</dt><dd>Pierre El Khoury</dd></div>
-    <div><dt>Œuvres</dt><dd>18 tirages pigmentaires</dd></div>
-    <div><dt>Papier</dt><dd>Hahnemühle Photo Rag Baryta</dd></div>
-    <div><dt>Formats</dt><dd>40 × 60 cm, éditions de 5<br>80 × 120 cm, éditions de 3</dd></div>
-  </dl>
-</div></section>
-
-<section id="oeuvres"><div class="wrap">
-  <p class="label">Les œuvres</p><h2>Liste des œuvres</h2>
-  <div class="works">{works()}
-  </div>
-</div></section>
-
-<section id="texte" class="essay"><div class="wrap">
-  <p class="label">Texte d’exposition</p><h2>Ce Qui Demeure</h2>
-  <p class="meta">Par Pierre El Khoury, commissaire de l’exposition</p>
-  <div class="body">{paras}<p class="sig">Pierre El Khoury</p></div>
-  <ol class="notes">{notes}</ol>
-</div></section>
-
-<section id="bio"><div class="wrap bio">
-  <div><img src="img/portrait.jpg" width="900" height="900" alt="Portrait d’Arnaud de Turckheim" loading="lazy">
-    <p class="name">Arnaud de Turckheim</p></div>
-  <div><p class="label">L’artiste</p><h2>Bio</h2><div class="body">{bio}</div></div>
-</div></section>
-
-<section id="contact" class="contact"><div class="wrap">
-  <p class="label">Contact</p><h2>Écrire</h2>
-  <div class="rows">
-    <div><p class="who">Arnaud de Turckheim</p><p class="role">Artiste</p>
-      <a class="mail" href="mailto:{EMAIL_ARNAUD}">{EMAIL_ARNAUD}</a></div>
-    <div><p class="who">Pierre El Khoury</p><p class="role">Commissaire de l’exposition</p>
-      <a class="mail" href="mailto:{EMAIL_PIERRE}">{EMAIL_PIERRE}</a></div>
-  </div>
-</div></section>
+{body}
 </main>
-
-<footer><div class="wrap">
-  <span>© 2026 Arnaud de Turckheim. Toutes les images sont protégées.</span>
-  <span>Commissariat de Pierre El Khoury · Lieu prêté par Roka</span>
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="/">Arnaud de Turckheim</a>
+  <span><a href="mailto:{SITE['email']}">{SITE['email']}</a></span>
+  <span>© 2026 · Toutes les images sont protégées</span>
 </div></footer>
-
-<div class="lightbox" role="dialog" aria-label="Image en grand"><img alt=""></div>
-<script>{JS}</script>
+<script>
+const b=document.querySelector('.burger');b.addEventListener('click',()=>{{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)}});
+document.addEventListener('keydown',e=>{{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href}});
+</script>
 </body>
 </html>
 """
-    (HERE / "index.html").write_text(page, encoding="utf-8")
-    print("index.html")
+    out = HERE / path.strip("/") / "index.html" if path != "/404.html" else HERE / "404.html"
+    if path == "/":
+        out = HERE / "index.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(doc, encoding="utf-8")
+
+
+# ---------------------------------------------------------------- pages
+
+def home():
+    w = {t[0]: t for t in WORKS}
+    baobab, pool, porters = w["La Figure de l'absence"], w["Hors saison"], w["Les porteurs de lumière"]
+    body = f"""
+<section class="home-hero">
+  <div class="home-intro">
+    <p class="kicker">Photographie</p>
+    <h1>Arnaud<br>de Turckheim</h1>
+    <p class="lead">{HOME_LEAD}</p>
+    <p class="links"><a class="arrow" href="/photographies/">Voir les photographies</a></p>
+  </div>
+  <a class="home-baobab" href="/photographies/{slug(baobab[0])}/">
+    {img(baobab[0], "works", "(min-width: 900px) 46vw, 100vw", eager=True)}
+    <span class="cap"><em>{typo(baobab[0])}</em>, {baobab[1]}, {year(baobab[3])}</span>
+  </a>
+</section>
+
+<section class="home-expo"><div class="wrap">
+  <a class="expo-card" href="/expositions/{EXPO['slug']}/">
+    {img(pool[0], "works", "(min-width: 900px) 64vw, 100vw")}
+    <div class="expo-text">
+      <p class="kicker">Exposition · {EXPO['year']}</p>
+      <h2>{EXPO['title']}</h2>
+      <p class="meta">{EXPO['dates']}<br>{EXPO['address']}</p>
+      <p>{EXPO['lead']}</p>
+      <span class="arrow">Découvrir l’exposition</span>
+    </div>
+  </a>
+</div></section>
+
+<section class="home-statement"><div class="wrap narrow">
+  <blockquote>Être là, regarder, attendre - puis laisser le réel continuer sans soi.</blockquote>
+  <p class="attr">Pierre El Khoury, <em>Ce Qui Demeure</em></p>
+</div></section>
+
+<section class="home-last"><div class="wrap">
+  <a class="wide" href="/photographies/{slug(porters[0])}/">
+    {img(porters[0], "works", "100vw")}
+    <span class="cap"><em>{typo(porters[0])}</em>, {porters[1]}, {year(porters[3])}</span>
+  </a>
+  <div class="home-links">
+    <a href="/photographies/"><span class="kicker">Photographies</span><span class="big">Dix-huit images, 2017 - 2019</span></a>
+    <a href="/a-propos/"><span class="kicker">À propos</span><span class="big">Ingénieur, photographe, geek cowboy</span></a>
+    <a href="/contact/"><span class="kicker">Contact</span><span class="big">Écrire à l’artiste</span></a>
+  </div>
+</div></section>
+"""
+    page("/", "", body, cls="is-home", og_image=slug(baobab[0]))
+
+
+def photographies():
+    items = "".join(f"""
+    <a class="tile" href="/photographies/{slug(t[0])}/">
+      {img(t[0], "thumbs", "(min-width: 1100px) 30vw, (min-width: 640px) 45vw, 100vw")}
+      <span class="t"><em>{typo(t[0])}</em></span>
+      <span class="m">{t[1]}, {year(t[3])}</span>
+    </a>""" for t in WORKS)
+    body = f"""
+<section class="page-head"><div class="wrap">
+  <p class="kicker">Photographies</p>
+  <h1>2017 - 2019</h1>
+  <p class="lead">Japon, États-Unis, Allemagne, Maroc, Sénégal, France. Dix-huit images exposées pour la
+  première fois dans <a href="/expositions/{EXPO['slug']}/"><em>{EXPO['title']}</em></a>, présentées ici dans
+  l’ordre de l’accrochage.</p>
+</div></section>
+<section class="grid-wrap"><div class="wrap"><div class="masonry">{items}
+</div></div></section>
+"""
+    page("/photographies/", "Photographies", body, active="photographies",
+         desc="Dix-huit photographies d’Arnaud de Turckheim, 2017 - 2019 : Japon, États-Unis, Allemagne, Maroc, Sénégal, France.")
+
+
+def work_pages():
+    n = len(WORKS)
+    for i, (title, place, country, when, fmt, ed) in enumerate(WORKS):
+        prev, nxt = WORKS[(i - 1) % n], WORKS[(i + 1) % n]
+        support = PAPER + (", contrecollé sur aluminium" if ed == 3 else "")
+        quote = ""
+        if title in EXCERPTS:
+            quote = f"""<blockquote class="excerpt">{EXCERPTS[title]}<cite>Pierre El Khoury</cite></blockquote>"""
+        kind = "port" if title in PORTRAIT_WORKS else "land"
+        body = f"""
+<article class="work-page {kind}">
+  <figure class="work-img"><a href="/img/works/{slug(title)}.jpg" class="zoom">{img(title, "works", "(min-width: 1000px) 70vw, 100vw", eager=True)}</a></figure>
+  <aside class="work-info">
+    <p class="kicker">{i + 1:02d} / {n}</p>
+    <h1>{typo(title)}</h1>
+    <p class="place">{place}, {country}<br>{when.capitalize()}</p>
+    {quote}
+    <dl>
+      <div><dt>Tirage</dt><dd>{support}</dd></div>
+      <div><dt>Format</dt><dd>{fmt} cm, hors cadre</dd></div>
+      <div><dt>Édition</dt><dd>{ed} exemplaires</dd></div>
+      <div><dt>Exposition</dt><dd><a href="/expositions/{EXPO['slug']}/"><em>{EXPO['title']}</em></a>, Paris, {EXPO['year']}</dd></div>
+    </dl>
+    <p class="ask"><a class="arrow" href="mailto:{SITE['email']}?subject={esc(typo(title))}">Se renseigner sur ce tirage</a></p>
+    <nav class="pager">
+      <a data-prev href="/photographies/{slug(prev[0])}/">← <em>{typo(prev[0])}</em></a>
+      <a data-close href="/photographies/">Toutes</a>
+      <a data-next href="/photographies/{slug(nxt[0])}/"><em>{typo(nxt[0])}</em> →</a>
+    </nav>
+  </aside>
+</article>
+"""
+        page(f"/photographies/{slug(title)}/", typo(title), body, active="photographies", cls="is-work",
+             desc=f"{typo(title)}, {place}, {when}. Photographie d’Arnaud de Turckheim.", og_image=slug(title))
+
+
+TEXT_TITLES = ["La Figure de l’absence", "Ce Qui Demeure", "Les Revenantes", "Les Porteurs de lumière",
+               "La Traversée", "Le Détour", "Hors saison", "L’Apparition", "La Gardienne",
+               "Le Songe éveillé", "The Americans"]
+SUP = {"¹": "1", "²": "2", "³": "3", "⁴": "4"}
+
+
+def essay():
+    body, notes = (HERE / "content" / "texte.txt").read_text().split("---NOTES---")
+
+    def rich(t):
+        t = html.escape(t, quote=False)
+        for title in TEXT_TITLES:
+            t = t.replace(title, f"<em>{title}</em>")
+        return t
+
+    paras = []
+    for b in body.strip().split("\n\n"):
+        t = rich(" ".join(b.split()))
+        for k, v in SUP.items():
+            t = t.replace(k, f'<sup><a href="#note-{v}" id="ref-{v}">{v}</a></sup>')
+        paras.append(f"<p>{t}</p>")
+    items = []
+    for n in notes.strip().split("\n\n"):
+        n = n.strip()
+        v = SUP[n[0]]
+        items.append(f'<li id="note-{v}"><a href="#ref-{v}">{v}</a> {rich(n[1:].strip())}</li>')
+    return "".join(paras), "".join(items)
+
+
+def expositions():
+    body = f"""
+<section class="page-head"><div class="wrap">
+  <p class="kicker">Expositions</p>
+  <h1>Expositions</h1>
+</div></section>
+<section><div class="wrap">
+  <a class="expo-row" href="/expositions/{EXPO['slug']}/">
+    <span class="y">{EXPO['year']}</span>
+    <span class="t"><em>{EXPO['title']}</em></span>
+    <span class="m">Exposition personnelle · {EXPO['address']}<br>Commissariat de {EXPO['curator']}</span>
+    {img("Hors saison", "thumbs", "240px")}
+  </a>
+</div></section>
+"""
+    page("/expositions/", "Expositions", body, active="expositions")
+
+    paras, notes = essay()
+    intro = "".join(f"<p>{p}</p>" for p in EXPO["intro"])
+    works = "".join(f"""
+      <a class="tile" href="/photographies/{slug(t[0])}/">
+        {img(t[0], "thumbs", "(min-width: 900px) 22vw, 45vw")}
+        <span class="t"><em>{typo(t[0])}</em></span><span class="m">{t[1]}, {year(t[3])}</span>
+      </a>""" for t in WORKS)
+    credits = " · ".join(EXPO["credits"])
+    body = f"""
+<section class="expo-hero">
+  {img("Hors saison", "works", "100vw", eager=True)}
+</section>
+<section class="expo-band"><div class="wrap">
+  <div><p class="kicker">Exposition personnelle · {EXPO['year']}</p><h1>{EXPO['title']}</h1>
+    <p class="sub">Une exposition d’Arnaud de Turckheim</p></div>
+  <dl class="facts">
+    <div><dt>Dates</dt><dd>{EXPO['dates']}</dd></div>
+    <div><dt>Vernissage</dt><dd>Mercredi 4 novembre</dd></div>
+    <div><dt>Lieu</dt><dd>{EXPO['address']}</dd></div>
+    <div><dt>Commissariat</dt><dd>{EXPO['curator']}</dd></div>
+  </dl>
+</div></section>
+
+<section class="expo-intro"><div class="wrap two">
+  <p class="lead">{EXPO['lead']}</p>
+  <div class="prose">{intro}</div>
+</div></section>
+
+<section class="expo-baobab"><div class="wrap">
+  <figure>{img("La Figure de l'absence", "works", "(min-width: 900px) 40vw, 90vw")}
+    <figcaption><em>La Figure de l’absence</em>, Sine-Saloum, 2019. L’image qui ouvre l’exposition.</figcaption></figure>
+</div></section>
+
+<section class="expo-works"><div class="wrap">
+  <p class="kicker">Les œuvres</p><h2>Dix-huit tirages</h2>
+  <p class="note">Tirages jet d’encre pigmentaire sur papier Hahnemühle Photo Rag Baryta, réalisés par Picto Bastille.
+  Grands formats 80 × 120 cm, éditions de 3, contrecollés sur aluminium. Petits formats 40 × 60 cm, éditions de 5.</p>
+  <div class="mini-grid">{works}
+  </div>
+</div></section>
+
+<section class="essay" id="texte"><div class="wrap">
+  <div class="essay-head"><p class="kicker">Texte</p><h2>Être là sans s’imposer</h2>
+    <p class="by">Par Pierre El Khoury, commissaire de l’exposition</p></div>
+  <div class="essay-body">{paras}<p class="sig">Pierre El Khoury</p></div>
+  <ol class="notes">{notes}</ol>
+</div></section>
+
+<section class="expo-contact"><div class="wrap two">
+  <div><p class="kicker">Informations</p><h2>Contact</h2></div>
+  <div class="contact-list">
+    <div><p class="who">Arnaud de Turckheim</p><p class="role">Artiste</p><a href="mailto:{SITE['email']}">{SITE['email']}</a></div>
+    <div><p class="who">Pierre El Khoury</p><p class="role">Commissaire de l’exposition</p><a href="mailto:{EXPO['curator_email']}">{EXPO['curator_email']}</a></div>
+    <p class="credits">{credits}</p>
+  </div>
+</div></section>
+"""
+    page(f"/expositions/{EXPO['slug']}/", EXPO["title"], body, active="expositions", cls="is-expo",
+         desc=f"Ce Qui Demeure, première exposition personnelle d’Arnaud de Turckheim. {EXPO['dates']}, {EXPO['address']}. Commissariat de Pierre El Khoury.")
+
+
+def about():
+    bio = "".join(f"<p>{p}</p>" for p in BIO)
+    statement = "".join(f"<p>{p}</p>" for p in STATEMENT)
+    miles = "".join(f"<div><dt>{a}</dt><dd>{b}</dd></div>" for a, b in MILESTONES)
+    body = f"""
+<section class="about-head"><div class="wrap about-grid">
+  <figure class="portrait"><img src="/img/portrait.jpg" width="900" height="900" alt="Portrait d’Arnaud de Turckheim" fetchpriority="high"></figure>
+  <div>
+    <p class="kicker">À propos</p>
+    <h1>Arnaud de Turckheim</h1>
+    <p class="lead">Ingénieur de formation, photographe depuis les années 2000. Une pratique gardée privée
+    pendant près de vingt ans, rendue publique en 2026.</p>
+    <div class="prose">{bio}</div>
+  </div>
+</div></section>
+
+<section class="statement"><div class="wrap two">
+  <div><p class="kicker">Démarche</p><h2>Ce qui affleure dans l’ordinaire</h2></div>
+  <div class="prose">{statement}</div>
+</div></section>
+
+<section class="strip"><div class="wrap strip-row">
+  {"".join(f'<a href="/photographies/{slug(t)}/">{img(t, "thumbs", "33vw")}</a>' for t in ["Les revenantes", "Le songe éveillé", "La charpente du monde"])}
+</div></section>
+
+<section class="cv"><div class="wrap two">
+  <div><p class="kicker">Repères</p><h2>Parcours</h2></div>
+  <dl class="facts">{miles}</dl>
+</div></section>
+"""
+    page("/a-propos/", "À propos", body, active="a-propos",
+         desc="Arnaud de Turckheim, ingénieur de formation et photographe, né à Paris en 1990. Bio et démarche.")
+
+
+def contact():
+    body = f"""
+<section class="contact-page"><div class="wrap contact-grid">
+  <div>
+    <p class="kicker">Contact</p>
+    <h1>Écrire</h1>
+    <p class="lead">Pour un tirage, une exposition, une publication ou simplement une conversation.</p>
+    <p class="mail"><a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
+    <div class="curator">
+      <p class="kicker">Commissariat de <em>{EXPO['title']}</em></p>
+      <p class="who">Pierre El Khoury</p>
+      <a href="mailto:{EXPO['curator_email']}">{EXPO['curator_email']}</a>
+    </div>
+  </div>
+  <a class="contact-img" href="/photographies/l-attente/">{img("L'attente", "works", "(min-width: 900px) 40vw, 100vw")}</a>
+</div></section>
+"""
+    page("/contact/", "Contact", body, active="contact")
+
+
+def not_found():
+    body = f"""<section class="page-head"><div class="wrap">
+  <p class="kicker">404</p><h1>Rien ici</h1>
+  <p class="lead">Cette page n’existe pas, ou plus. <a href="/">Retour à l’accueil</a>.</p>
+</div></section>"""
+    page("/404.html", "Page introuvable", body)
+
+
+def main():
+    for d in OUT_DIRS:
+        shutil.rmtree(HERE / d, ignore_errors=True)
+    home(); photographies(); work_pages(); expositions(); about(); contact(); not_found()
+    print("ok :", len(list(HERE.rglob("index.html"))) + 1, "pages")
 
 
 if __name__ == "__main__":

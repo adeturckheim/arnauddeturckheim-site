@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Arnaud de Turckheim</title>
+<meta name="description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
+<link rel="canonical" href="https://arnauddeturckheim.com/contact/">
+<meta property="og:title" content="Contact · Arnaud de Turckheim">
+<meta property="og:description" content="Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.">
+<meta property="og:image" content="https://arnauddeturckheim.com/img/works/hors-saison.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f1efe9">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="">
+<header class="top"><div class="wrap">
+  <a class="brand" href="/">Arnaud de Turckheim</a>
+  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <nav><a href="/photographies/">Photographies</a><a href="/expositions/">Expositions</a><a href="/a-propos/">À propos</a><a href="/contact/" aria-current="page">Contact</a></nav>
+</div></header>
+<main>
+
+<section class="contact-page"><div class="wrap contact-grid">
+  <div>
+    <p class="kicker">Contact</p>
+    <h1>Écrire</h1>
+    <p class="lead">Pour un tirage, une exposition, une publication ou simplement une conversation.</p>
+    <p class="mail"><a href="mailto:adeturckheim@gmail.com">adeturckheim@gmail.com</a></p>
+    <div class="curator">
+      <p class="kicker">Commissariat de <em>Ce Qui Demeure</em></p>
+      <p class="who">Pierre El Khoury</p>
+      <a href="mailto:pek.elkhoury@gmail.com">pek.elkhoury@gmail.com</a>
+    </div>
+  </div>
+  <a class="contact-img" href="/photographies/l-attente/"><img class="" src="/img/works/l-attente.jpg" srcset="/img/thumbs/l-attente.jpg 900w, /img/works/l-attente.jpg 2200w" sizes="(min-width: 900px) 40vw, 100vw" width="1466" height="2200" loading="lazy" decoding="async" alt="L’attente"></a>
+</div></section>
+
+</main>
+<footer class="foot"><div class="wrap">
+  <a class="brand" href="/">Arnaud de Turckheim</a>
+  <span><a href="mailto:adeturckheim@gmail.com">adeturckheim@gmail.com</a></span>
+  <span>© 2026 · Toutes les images sont protégées</span>
+</div></footer>
+<script>
+const b=document.querySelector('.burger');b.addEventListener('click',()=>{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)});
+document.addEventListener('keydown',e=>{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&document.querySelector('[data-close]'))location=document.querySelector('[data-close]').href});
+</script>
+</body>
+</html>
