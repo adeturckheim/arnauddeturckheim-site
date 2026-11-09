@@ -15,6 +15,8 @@ import content as C
 HERE = Path(__file__).parent
 FR_DIRS = ["photographies", "expositions", "a-propos", "contact"]
 CUR = ' aria-current="page"'
+import hashlib
+VER = hashlib.sha1((HERE / 'style.css').read_bytes() + (HERE / 'viewer.js').read_bytes()).hexdigest()[:8]
 
 # Routes : clé -> (chemin FR, chemin EN)
 ROUTES = {
@@ -31,7 +33,7 @@ T = {
     "fr": {
         "role": "Photographe", "nav": [("photos", "Photographies"), ("expos", "Expositions"),
                                         ("about", "À propos"), ("contact", "Contact")],
-        "switch": "EN", "switch_label": "English version", "rights": "© 2026 · Toutes les images sont protégées", "f_artist": "L’artiste", "f_sales": "Acquisitions et tirages", "f_sales_who": "Pierre El Khoury, commissaire",
+        "switch": "EN", "switch_label": "English version", "rights": "© 2026 · Toutes les images sont protégées", "f_artist": "L’artiste", "f_sales": "Acquisitions et tirages", "f_sales_who": "Pierre El Khoury",
         "desc": "Arnaud de Turckheim, photographe. Première exposition personnelle, Ce Qui Demeure, Paris, novembre 2026.",
         "kicker_home": "Photographie", "see_photos": "Voir les photographies", "expo_kicker": "Exposition",
         "discover": "Découvrir l’exposition", "quote": "Être là, regarder, attendre - puis laisser le réel continuer sans soi.",
@@ -39,12 +41,12 @@ T = {
                   ("about", "À propos", "Ingénieur, photographe, geek cowboy"),
                   ("contact", "Contact", "Écrire à l’artiste")],
         "photos_title": "Photographies",
-        "photos_lead": "Une première sélection de dix-huit images, exposées dans {expo} et présentées ici dans "
-                       "l’ordre de l’accrochage. Les grands formats de l’exposition apparaissent plus grands.",
+        "photos_lead": "Une première sélection de dix-huit images, exposées dans {expo}, dans l’ordre de "
+                       "l’accrochage. Flèches du clavier, clic ou glissement pour passer d’une image à l’autre.",
         "photos_desc": "Photographies d’Arnaud de Turckheim : Japon, États-Unis, Allemagne, Maroc, Sénégal, France.",
         "print": "Tirage", "format": "Format", "edition": "Édition", "exhibition": "Exposition",
         "unframed": "cm, hors cadre", "copies": "{n} exemplaires", "mounted": ", contrecollé sur aluminium",
-        "ask": "Se renseigner sur ce tirage", "all": "Toutes",
+        "ask": "Se renseigner sur ce tirage", "all": "Toutes", "sheet": "Fiche de l’œuvre", "prev": "Photo précédente", "next": "Photo suivante",
         "work_desc": "{t}, {p}, {w}. Photographie d’Arnaud de Turckheim.",
         "expos_title": "Expositions", "solo": "Exposition personnelle", "curated": "Commissariat de",
         "by_artist": "Une exposition d’Arnaud de Turckheim",
@@ -65,16 +67,16 @@ T = {
         "cv_kicker": "Repères", "cv_title": "Parcours",
         "about_desc": "Arnaud de Turckheim, ingénieur de formation et photographe, né à Paris en 1990. Bio et démarche.",
         "portrait_alt": "Portrait d’Arnaud de Turckheim",
-        "contact_title": "Écrire",
+        "contact_title": "Contact",
         "contact_lead": "Pour une exposition, une publication ou simplement une conversation.",
-        "sales_lead": "Pour l’acquisition d’un tirage, écrivez à Pierre El Khoury, commissaire de {expo}.",
+        "sales_lead": "Pour l’acquisition d’un tirage, contactez Pierre El Khoury.",
         "curator_of": "Acquisitions et tirages", "nf_title": "Rien ici", "nf_text": "Cette page n’existe pas, ou plus.",
         "back_home": "Retour à l’accueil", "translated": "",
     },
     "en": {
         "role": "Photographer", "nav": [("photos", "Photographs"), ("expos", "Exhibitions"),
                                          ("about", "About"), ("contact", "Contact")],
-        "switch": "FR", "switch_label": "Version française", "rights": "© 2026 · All images are protected", "f_artist": "The artist", "f_sales": "Sales and prints", "f_sales_who": "Pierre El Khoury, curator",
+        "switch": "FR", "switch_label": "Version française", "rights": "© 2026 · All images are protected", "f_artist": "The artist", "f_sales": "Sales and prints", "f_sales_who": "Pierre El Khoury",
         "desc": "Arnaud de Turckheim, photographer. First solo exhibition, Ce Qui Demeure, Paris, November 2026.",
         "kicker_home": "Photography", "see_photos": "View the photographs", "expo_kicker": "Exhibition",
         "discover": "Discover the exhibition", "quote": "To be there, to look, to wait - and then let reality go on without oneself.",
@@ -82,12 +84,12 @@ T = {
                   ("about", "About", "Engineer, photographer, geek cowboy"),
                   ("contact", "Contact", "Write to the artist")],
         "photos_title": "Photographs",
-        "photos_lead": "A first selection of eighteen images, shown in {expo} and presented here in the order of "
-                       "the hang. The exhibition’s large formats appear larger.",
+        "photos_lead": "A first selection of eighteen images, shown in {expo}, in the order of the hang. "
+                       "Use the arrow keys, click or swipe to move from one image to the next.",
         "photos_desc": "Photographs by Arnaud de Turckheim: Japan, United States, Germany, Morocco, Senegal, France.",
         "print": "Print", "format": "Size", "edition": "Edition", "exhibition": "Exhibition",
         "unframed": "cm, unframed", "copies": "Edition of {n}", "mounted": ", mounted on aluminium",
-        "ask": "Enquire about this print", "all": "All",
+        "ask": "Enquire about this print", "all": "All", "sheet": "About this work", "prev": "Previous photograph", "next": "Next photograph",
         "work_desc": "{t}, {p}, {w}. Photograph by Arnaud de Turckheim.",
         "expos_title": "Exhibitions", "solo": "Solo exhibition", "curated": "Curated by",
         "by_artist": "An exhibition by Arnaud de Turckheim",
@@ -108,9 +110,9 @@ T = {
         "cv_kicker": "Milestones", "cv_title": "Background",
         "about_desc": "Arnaud de Turckheim, engineer by training and photographer, born in Paris in 1990. Biography and statement.",
         "portrait_alt": "Portrait of Arnaud de Turckheim",
-        "contact_title": "Get in touch",
+        "contact_title": "Contact",
         "contact_lead": "For an exhibition, a publication, or simply a conversation.",
-        "sales_lead": "To acquire a print, please write to Pierre El Khoury, curator of {expo}.",
+        "sales_lead": "To acquire a print, please contact Pierre El Khoury.",
         "curator_of": "Sales and prints", "nf_title": "Nothing here", "nf_text": "This page does not exist, or no longer does.",
         "back_home": "Back to the homepage", "translated": "Translated from the French.",
     },
@@ -206,7 +208,8 @@ def page(L, path, alt, title, body, *, desc="", active="", cls="", og_image="hor
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/style.css?v={VER}">
+<script src="/viewer.js?v={VER}" defer></script>
 </head>
 <body class="{cls}">
 <header class="top"><div class="wrap">
@@ -223,12 +226,12 @@ def page(L, path, alt, title, body, *, desc="", active="", cls="", og_image="hor
 <footer class="foot"><div class="wrap">
   <a class="brand" href="{url('home', L)}">Arnaud de Turckheim</a>
   <div class="foot-col"><span class="k">{t['f_artist']}</span><a href="mailto:{C.SITE['email']}">{C.SITE['email']}</a></div>
-  <div class="foot-col"><span class="k">{t['f_sales']}</span><span>{t['f_sales_who']}</span><a href="mailto:{C.EXPO['curator_email']}">{C.EXPO['curator_email']}</a></div>
+  <div class="foot-col"><span class="k">{t['f_sales']}</span><span>{t['f_sales_who']}</span><a href="mailto:{C.EXPO['curator_email']}">{C.EXPO['curator_email']}</a><a href="tel:{C.EXPO['sales_tel']}">{C.EXPO['sales_phone']}</a></div>
   <span class="rights">{t['rights']}</span>
 </div></footer>
 <script>
 const b=document.querySelector('.burger');b.addEventListener('click',()=>{{const o=document.body.classList.toggle('menu');b.setAttribute('aria-expanded',o)}});
-document.addEventListener('keydown',e=>{{const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]'),c=document.querySelector('[data-close]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&c)location=c.href}});
+document.addEventListener('keydown',e=>{{if(document.querySelector('[data-viewer]'))return;const p=document.querySelector('[data-prev]'),n=document.querySelector('[data-next]'),c=document.querySelector('[data-close]');if(e.key==='ArrowLeft'&&p)location=p.href;if(e.key==='ArrowRight'&&n)location=n.href;if(e.key==='Escape'&&c)location=c.href}});
 </script>
 </body>
 </html>
@@ -292,49 +295,45 @@ def home(L):
     page(L, url("home", L), alt_of("home", L), "", body, cls="is-home", og_image=slug(baobab[0]))
 
 
-# Grille « à l'échelle » : chaque image est dimensionnée selon son format de tirage, pas selon son
-# orientation. Petit 60 x 40 = 60 unités de large (portrait 40), grand 120 x 80 réduit à 90 (portrait 60),
-# soit 1,5 fois plus grand en linéaire. Rangées composées à la main dans l'ordre de l'accrochage,
-# 210 unités maximum, alignées en bas.
-ROWS = [
-    ["Les porteurs de lumière", "L'attente de l'eau", "Le Témoin"],
-    ["L'apparition", "La Gardienne", "Le temps suspendu"],
-    ["L'ascension", "La charpente du monde", "L'autre côté"],
-    ["Les revenantes", "Le détour", "Quiétude"],
-    ["La traversée", "Habiter l'absence", "Le songe éveillé"],
-    ["L'attente", "La Figure de l'absence", "Hors saison"],
-]
-assert sorted(sum(ROWS, [])) == sorted(w[0] for w in C.WORKS)
+# Visionneuse : une photo en grand, une pellicule de miniatures, navigation clavier, clic et swipe.
+# Les grands formats de l'exposition occupent toute la hauteur de la scène, les petits 80 %.
+# Chaque photo a une ancre (#slug) pour pouvoir partager un lien direct.
 
-
-def units(title):
-    ed = {w[0]: w[5] for w in C.WORKS}[title]
-    port = title in C.PORTRAIT_WORKS
-    return (60 if port else 90) if ed == 3 else (40 if port else 60)
-
-
-def scaled_grid(L, compact=False):
-    w = {x[0]: x for x in C.WORKS}
-    rows = []
-    for row in ROWS:
-        tiles = "".join(f"""
-      <a class="tile{' big' if w[x][5] == 3 else ''}" style="--u:{units(x)}" href="{work_url(x, L)}">
-        {img(x, "works" if w[x][5] == 3 and not compact else "thumbs", f"(min-width: 820px) {round(units(x) * 0.42)}vw, {min(100, round(units(x) / 90 * 100))}vw")}
-        <span class="t"><em>{typo(x)}</em></span>
-        <span class="m">{w[x][1]}, {year(w[x][3])}</span>
-      </a>""" for x in row)
-        rows.append(f'<div class="row">{tiles}\n    </div>')
-    return f'<div class="scaled{" compact" if compact else ""}">' + "".join(rows) + "</div>"
+def viewer(L, theme="paper", vid="v"):
+    t, n = T[L], len(C.WORKS)
+    slides, caps, thumbs = [], [], []
+    for i, (title, place, country, when, fmt, ed) in enumerate(C.WORKS):
+        s_ = slug(title)
+        w, h = (1466, 2200) if title in C.PORTRAIT_WORKS else (2200, 1466)
+        size = "big" if ed == 3 else "small"
+        slides.append(f'''<figure class="slide {size}" id="{vid}-{s_}" data-slug="{s_}">
+        <img data-src="/img/works/{s_}.jpg" data-srcset="/img/thumbs/{s_}.jpg 900w, /img/works/{s_}.jpg 2200w"
+             sizes="(min-width: 900px) 80vw, 100vw" width="{w}" height="{h}" alt="{esc(typo(title))}, {place}, {year(when)}"></figure>''')
+        caps.append(f'''<div class="vcap">
+        <span class="t"><em>{typo(title)}</em></span>
+        <span class="m">{place}, {country_l(country, L)}, {year(when)} · {fmt} cm</span>
+        <a class="more" href="{work_url(title, L)}">{t['sheet']} →</a></div>''')
+        thumbs.append(f'''<button class="th" aria-label="{esc(typo(title))}"><img src="/img/thumbs/{s_}.jpg" alt="" loading="lazy" decoding="async"></button>''')
+    return f'''<div class="viewer {theme}" data-viewer tabindex="0" aria-roledescription="carrousel" aria-label="{t['photos_title']}">
+  <div class="stage">
+    {"".join(slides)}
+    <button class="nav prev" aria-label="{t['prev']}"></button><button class="nav next" aria-label="{t['next']}"></button>
+  </div>
+  <div class="vbar">
+    <span class="count"><b>01</b> / {n:02d}</span>
+    <div class="caps">{"".join(caps)}</div>
+    <span class="arrows"><button class="a-prev" aria-label="{t['prev']}">←</button><button class="a-next" aria-label="{t['next']}">→</button></span>
+  </div>
+  <div class="strip">{"".join(thumbs)}</div>
+</div>'''
 
 
 def photographies(L):
     t = T[L]
     body = f"""
-<section class="page-head"><div class="wrap">
-  <h1>{t['photos_title']}</h1>
-  <p class="lead">{t['photos_lead'].format(expo=expo_link(L))}</p>
-</div></section>
-<section class="grid-wrap"><div class="wrap">{scaled_grid(L)}</div></section>
+<h1 class="sr">{t['photos_title']}</h1>
+<section class="gallery">{viewer(L)}</section>
+<section class="gallery-note"><div class="wrap"><p>{t['photos_lead'].format(expo=expo_link(L))}</p></div></section>
 """
     page(L, url("photos", L), alt_of("photos", L), t["photos_title"], body, active="photos", desc=t["photos_desc"])
 
@@ -451,12 +450,13 @@ def expositions(L):
     <figcaption>{t['baobab_cap']}</figcaption></figure>
 </div></section>
 
-<section class="expo-works"><div class="wrap">
+<section class="expo-works night"><div class="wrap">
   <p class="kicker">{t['works_kicker']}</p><h2>{t['works_title']}</h2>
   <p class="note">{t['works_note']}</p>
-  {scaled_grid(L, compact=True)}
-  <p class="credits">{credits}</p>
-</div></section>
+</div>
+  {viewer(L, "night", "x")}
+  <div class="wrap"><p class="credits">{credits}</p></div>
+</section>
 
 <section class="essay" id="texte"><div class="wrap">
   <div class="essay-head"><p class="kicker">{t['essay_kicker']}</p><h2>{t['essay_title']}</h2>
@@ -508,15 +508,15 @@ def contact(L):
     body = f"""
 <section class="contact-page"><div class="wrap contact-grid">
   <div>
-    <p class="kicker">Contact</p>
     <h1>{t['contact_title']}</h1>
     <p class="lead">{t['contact_lead']}</p>
     <p class="mail"><a href="mailto:{C.SITE['email']}">{C.SITE['email']}</a></p>
     <div class="curator">
       <p class="kicker">{t['curator_of']}</p>
-      <p class="sales">{t['sales_lead'].format(expo=expo_link(L))}</p>
+      <p class="sales">{t['sales_lead']}</p>
       <p class="who">Pierre El Khoury</p>
-      <a href="mailto:{C.EXPO['curator_email']}">{C.EXPO['curator_email']}</a>
+      <a href="mailto:{C.EXPO['curator_email']}">{C.EXPO['curator_email']}</a><br>
+      <a href="tel:{C.EXPO['sales_tel']}">{C.EXPO['sales_phone']}</a>
     </div>
   </div>
   <a class="contact-img" href="{work_url("L'attente", L)}">{img("L'attente", "works", "(min-width: 900px) 40vw, 100vw")}</a>

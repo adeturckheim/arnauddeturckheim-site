@@ -105,6 +105,8 @@ EXPO = {
     "address": "10 rue Lincoln, 75008 Paris",
     "curator": "Pierre El Khoury",
     "curator_email": "pek.elkhoury@gmail.com",
+    "sales_phone": "06 50 85 07 98",  # Pierre, contact acquisitions (accord d'Arnaud)
+    "sales_tel": "+33650850798",
     "credits": ["Commissariat de Pierre El Khoury", "Lieu prêté par Roka", "Tirages Picto Bastille, Paris"],
     "lead": "Première exposition personnelle d’Arnaud de Turckheim. Dix-huit photographies, une même "
             "question" + NB + ": qu’est-ce qui demeure lorsque tout continue de passer" + NB + "?",
